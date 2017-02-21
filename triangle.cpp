@@ -52,6 +52,7 @@ bool Triangle::intersect( const Ray &ray,
 
 	intersection_record.t_ = t;
 	intersection_record.position_ = ray.origin_ + t*ray.direction_;
+	intersection_record.object = this;
 	return true;
 
 

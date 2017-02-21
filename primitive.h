@@ -12,6 +12,8 @@ public:
 
     typedef std::unique_ptr< Primitive > PrimitiveUniquePtr;
 
+    glm::vec3 color;
+
     Primitive( void );
 
     virtual ~Primitive( void );

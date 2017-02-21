@@ -27,14 +27,42 @@ bool Scene::intersect( const Ray &ray,
 
 void Scene::load( void ) 
 {
-   // primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{  0.0f, 0.0f,  0.0f }, 0.2f } ) );
-   // primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ -0.5f, 0.0f, -1.0f }, 0.2f } ) );
-   // primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{  0.0f,-0.5f, -2.0f }, 0.2f } ) );
-   // primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{  0.0f, 0.5f, -3.0f }, 0.2f } ) );
+   	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{  0.0f, 0.0f,  0.0f }, 0.2f } ) );
+   	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ -0.5f, 0.0f, -1.0f }, 0.2f } ) );
+   	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{  0.0f,-0.5f, -2.0f }, 0.2f } ) );
+   	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{  0.0f, 0.5f, -3.0f }, 0.2f } ) );
 
-    primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{  
-    													  			    glm::vec3{  -0.5f, -0.3f, -3.0f },
-                                          glm::vec3{  -0.5f, -0.8f, -3.0f },
-    													  			    glm::vec3{  -1.0f, -0.8f, -3.0f } } ) );
+	std::vector<glm::vec3> vertices;
+	std::vector<glm::vec3> normals;
+	std::vector<glm::vec2> uvs;
+	std::vector<Indexed_Face> faces;
+	int vertex_count;
+	int normal_count; 
+	int uv_count;
+	int face_count;
+
+	load_data(	"monkey45.obj",
+				vertices, 
+				normals, 
+				uvs, 
+				faces, 
+				vertex_count, 
+				normal_count, 
+				uv_count, 
+				face_count);
+
+	for(int i = 0; i < face_count; i++){
+		primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ 
+																	vertices[faces[i].vertices[0]],
+																	vertices[faces[i].vertices[1]],
+																	vertices[faces[i].vertices[2]] }));
+
+		primitives_.back()->color = glm::vec3{rand()%256/255.0, rand()%256/255.0, rand()%256/255.0};
+	}
+
+	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{  
+	// 																glm::vec3{  -0.5f,  0.0f, -1.0f },
+	// 																glm::vec3{   0.5f,  0.0f, -1.0f },
+	// 			  			    									glm::vec3{   0.0f,  0.8f, -1.0f } } ) );
 }
 
