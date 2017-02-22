@@ -12,7 +12,7 @@ public:
 
     typedef std::unique_ptr< Primitive > PrimitiveUniquePtr;
 
-    glm::vec3 color;
+    glm::vec3 color = glm::vec3(0.5f, 0.5f, 0.5f);
 
     Primitive( void );
 
