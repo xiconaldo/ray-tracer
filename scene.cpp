@@ -78,7 +78,7 @@ void Scene::load( void )
 	int uv_count;
 	int face_count;
 
-	load_data(	"monkey4.obj",
+	load_data(	"cube45.obj",
 				vertices, 
 				normals, 
 				uvs, 

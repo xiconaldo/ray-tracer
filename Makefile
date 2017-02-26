@@ -13,13 +13,13 @@ endif
 CPPFLAGS += -MMD \
 			-I../../../../work/common/glm-0.9.7.0 \
 			-I/usr/local/include \
-			-I/glm
+			-I./glm
 
 LDFLAGS = -L/usr/lib/gcc/x86_64-linux-gnu/4.8 \
 		  -L/usr/lib/x86_64-linux-gnu \
 		  -L/usr/lib \
 	      -L/usr/local/lib \
-	      -L/gml
+	      -L./gml
 
 LDLIBS =
 
