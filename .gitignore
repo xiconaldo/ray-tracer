@@ -3,3 +3,5 @@
 *.d
 *.obj
 *.mtl
+blog/*
+swpathtracer

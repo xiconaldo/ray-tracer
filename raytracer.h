@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iomanip>
 #include <cmath>
+#include <random>
 
 #include "camera.h"
 #include "scene.h"
@@ -18,7 +19,8 @@ public:
                const glm::vec3 background_color,
                Buffer &buffer );
 
-    void integrate( void );
+    void integrate( int thread_id = 0,
+    				int num_threads = 1 );
 
 private:
 

@@ -21,7 +21,7 @@ LDFLAGS = -L/usr/lib/gcc/x86_64-linux-gnu/4.8 \
 	      -L/usr/local/lib \
 	      -L./gml
 
-LDLIBS =
+LDLIBS = -lpthread
 
 SOURCES = $(wildcard *.cpp)
 
