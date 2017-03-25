@@ -10,63 +10,59 @@ RayTracer::RayTracer( Camera &camera,
 		buffer_( buffer )
 {}
 
-void RayTracer::integrate( int thread_id, int num_threads)
+void RayTracer::integrate( void )
 {
-	IntersectionRecord intersection_record;
+	const int num_rays = 100; // number of rays
+
 	std::default_random_engine generator;
-	int inc_x = num_threads/int(sqrt(num_threads));
-	int inc_y = num_threads/inc_x;
-	int init_x = thread_id%inc_x;
-	int init_y = thread_id/inc_y;
+	std::uniform_real_distribution<float> distribution_x(0.0f, 1.0f);
+	std::uniform_real_distribution<float> distribution_y(0.0f, 1.0f);
 
-	// Image space origin (i.e. x = 0 and y = 0) at the top left corner.
+	IntersectionRecord intersection_record;
+	
+	int init_x;
+	int init_y;
+	int max_x;
+	int max_y;
 
-	// Loops over image rows
-	for ( std::size_t y = init_y; y < buffer_.v_resolution_; y += inc_y )
-	{
-		if(thread_id == 0){
-			std::stringstream progress_stream;
-			progress_stream << "\rprogress .........................: "
-							<< std::fixed << std::setw( 6 )
-							<< std::setprecision( 2 )
-							<< 100.0 * y / ( buffer_.v_resolution_ - 1 )
-							<< "%";
+	int work_block;
+	int block_size_h = buffer_.h_resolution_ / 15; // /16
+	int block_size_v = buffer_.v_resolution_ / 15; // /16
+ 
+	while(true){
+		work_block = block++;
 
-			std::clog << progress_stream.str();
-		}
+		if(work_block > 255) break;
 
-		const int num_rays = 1000; // number of rays
+		init_x = (work_block & 0x0f) * block_size_h;
+		init_y = ((work_block & 0xf0) >> 4) * block_size_v;
 
-		// Loops over image columns
-		for ( std::size_t x = init_x; x < buffer_.h_resolution_; x += inc_x ){
+		max_x = std::min(init_x + block_size_h, int(buffer_.h_resolution_));
+		max_y = std::min(init_y + block_size_v, int(buffer_.v_resolution_));
 
-			buffer_.buffer_data_[x][y] = glm::vec3{0.0f};
 
-			std::uniform_real_distribution<float> distribution_x(0.0f, 1.0f);
-			std::uniform_real_distribution<float> distribution_y(0.0f, 1.0f);
+		for ( int y = init_y; y < max_y; y++ ){
 
-			for(int i = 0; i < num_rays; i++){
+			for ( int x = init_x; x < max_x; x++){
 
-				float x_pad = distribution_x(generator);
-				float y_pad = distribution_y(generator);
+				buffer_.buffer_data_[x][y] = glm::vec3{0.0f};
 
-				Ray ray{ camera_.getWorldSpaceRay( glm::vec2{ x + x_pad, y + y_pad } ) };
+				for(int i = 0; i < num_rays; i++){
 
-				buffer_.buffer_data_[x][y] += L(ray, 0);
+					float x_pad = distribution_x(generator);
+					float y_pad = distribution_y(generator);
 
-				// intersection_record.t_ = std::numeric_limits< double >::max();
-			
-				// if ( scene_.intersect( ray, intersection_record ) )
-				// 	buffer_.buffer_data_[x][y] += intersection_record.object->color;
-					
+					Ray ray{ camera_.getWorldSpaceRay( glm::vec2{ x + x_pad, y + y_pad } ) };
+
+					buffer_.buffer_data_[x][y] += L(ray, 0);			
+				}
+
+				buffer_.buffer_data_[x][y] = buffer_.buffer_data_[x][y] / float(num_rays);
+				glm::clamp(buffer_.buffer_data_[x][y], glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{1.0f, 1.0f, 1.0f});
 			}
-
-			buffer_.buffer_data_[x][y] = buffer_.buffer_data_[x][y] / float(num_rays);
-			glm::clamp(buffer_.buffer_data_[x][y], glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{1.0f, 1.0f, 1.0f});
 		}
-	}
 
-	std::clog << std::endl;
+	}
 }
 
 glm::vec3 RayTracer::L(const Ray& r, int depth){
@@ -109,3 +105,25 @@ glm::vec3 RayTracer::L(const Ray& r, int depth){
 	return Lo;
 }
 
+void RayTracer::print_progress(){
+
+	int work_block;
+
+	while(true){
+
+		work_block = block;
+		if(work_block > 255) break;
+
+		std::stringstream progress_stream;
+		progress_stream << "\rprogress .........................: "
+						<< std::fixed << std::setw( 6 )
+						<< std::setprecision( 2 )
+						<< 100.0 * (work_block+1) / 256
+						<< "%";
+
+		std::clog << progress_stream.str();
+
+		std::this_thread::sleep_for (std::chrono::milliseconds(100));
+	}
+	
+}

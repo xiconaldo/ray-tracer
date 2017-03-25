@@ -5,6 +5,9 @@
 #include <iomanip>
 #include <cmath>
 #include <random>
+#include <atomic>
+#include <chrono>
+#include <thread>
 
 #include "camera.h"
 #include "scene.h"
@@ -20,10 +23,11 @@ public:
                const glm::vec3 background_color,
                Buffer &buffer );
 
-    void integrate( int thread_id = 0,
-    				int num_threads = 1 );
+    void integrate( void );
 
     glm::vec3 L(const Ray& r, int depth);
+
+    void print_progress();
 
 private:
 
@@ -34,6 +38,8 @@ private:
     glm::dvec3 background_color_;
 
     Buffer &buffer_;
+
+    std::atomic<int> block{0};
 
 };
 
