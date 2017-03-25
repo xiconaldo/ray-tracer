@@ -3,5 +3,6 @@
 *.d
 *.obj
 *.mtl
+*.jpg
 blog/*
 swpathtracer

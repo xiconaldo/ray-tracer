@@ -9,6 +9,7 @@
 #include "camera.h"
 #include "scene.h"
 #include "buffer.h"
+#include <cmath>
 
 class RayTracer
 {
@@ -21,6 +22,8 @@ public:
 
     void integrate( int thread_id = 0,
     				int num_threads = 1 );
+
+    glm::vec3 L(const Ray& r, int depth);
 
 private:
 

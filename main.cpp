@@ -2,8 +2,8 @@
 
 int main( void )
 {
-	unsigned int x_resolution = 512;
-	unsigned int y_resolution = 512;
+	unsigned int x_resolution = 1024;
+	unsigned int y_resolution = 1024;
 
 	// OrthographicCamera camera{  -1.0f, 
 	// 							 1.0f, 
@@ -38,16 +38,17 @@ int main( void )
 
 	// rt.integrate(); // Renders the final image.
 	
-	std::thread t0(&RayTracer::integrate, &rt, 0, 4);
-	std::thread t1(&RayTracer::integrate, &rt, 1, 4);
-	std::thread t2(&RayTracer::integrate, &rt, 2, 4);
-	std::thread t3(&RayTracer::integrate, &rt, 3, 4);
+	const int num_threads = 4;
+	std::thread* threads[num_threads];
+	
+	for(int i = 0; i < num_threads; i++)
+		threads[i] = new std::thread{&RayTracer::integrate, &rt, i, num_threads};
 
-	t0.join();
-	t1.join();
-	t2.join();
-	t3.join();
-
+	for(int i = 0; i < num_threads; i++){
+		threads[i]->join();
+		delete threads[i];
+	}
+	
 	// Save the rendered image to a .ppm file.
 	rendering_buffer.save( "output_image.ppm" );
 
