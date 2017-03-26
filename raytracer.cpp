@@ -138,22 +138,25 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 void RayTracer::print_progress(){
 
 	int work_block;
+	int completed_blocks;
 
 	while(true){
 
 		work_block = block;
-		if(work_block > 255) break;
+		completed_blocks = work_block > 3 ? work_block-4 : 0;
 
 		std::stringstream progress_stream;
-		progress_stream << "\rprogress .........................: "
+		progress_stream << "\rProgress .........................: "
 						<< std::fixed << std::setw( 6 )
 						<< std::setprecision( 2 )
-						<< 100.0 * (work_block+1) / 256
-						<< "%";
+						<< 0.390625 * completed_blocks
+						<< "% | "
+						<< completed_blocks << "/" << 256;
 
 		std::clog << progress_stream.str();
 
-		std::this_thread::sleep_for (std::chrono::milliseconds(100));
+		if(work_block == 260) break;
+		std::this_thread::sleep_for (std::chrono::milliseconds(1000));
 	}
 	
 	std::clog << std::endl;	

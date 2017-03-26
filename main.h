@@ -8,6 +8,7 @@
 #include "buffer.h"
 #include "raytracer.h"
 #include <thread>
+#include <cstdlib>
 
 #endif /* MAIN_H_ */
 
