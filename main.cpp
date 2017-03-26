@@ -4,22 +4,13 @@ int main( void )
 {
 	unsigned int x_resolution = 512;
 	unsigned int y_resolution = 512;
-
-	// OrthographicCamera camera{  -1.0f, 
-	// 							 1.0f, 
-	// 						    -1.0f, 
-	// 							 1.0f,
-	// 							 glm::ivec2{ x_resolution, y_resolution }, 
-	// 							 glm::vec3{ 0.0f, 0.0f,  1.0f },	 // position
-	// 							 glm::vec3{ 0.0f, 1.0f,  0.0f },	 // up
-	// 							 glm::vec3{ 0.0f, 0.0f, -1.0f } };   // look at
 	
 	PerspectiveCamera camera{  -1.0f, 
 								1.0f, 
 							   -1.0f, 
 								1.0f,
 								glm::ivec2{ x_resolution, y_resolution }, 
-								glm::vec3{ 0.0f, 0.0f,  0.0f },	 // position
+								glm::vec3{ 0.0f, 0.0f,  2.0f },	 // position
 								glm::vec3{ 0.0f, 1.0f,  0.0f },	 // up
 								glm::vec3{ 0.0f, 0.0f, -1.0f },   // look at
                                 1.0f};
@@ -35,24 +26,14 @@ int main( void )
 				  scene,
 				  background_color,
 				  rendering_buffer );
-
-	// rt.integrate(); // Renders the final image.
 	
 	const int num_threads = 4;
-	std::thread* threads[num_threads];
-	std::thread  control{&RayTracer::print_progress, &rt};
-	
-	for(int i = 0; i < num_threads; i++)
-		threads[i] = new std::thread{&RayTracer::integrate, &rt};
+	const int num_rays = 100;
 
-	for(int i = 0; i < num_threads; i++){
-		threads[i]->join();
-		delete threads[i];
-	}
-	control.join();
+	rt.integrate( num_threads, num_rays); // Renders the final image.
 	
 	// Save the rendered image to a .ppm file.
-	rendering_buffer.save( "output_image.ppm" );
+	rendering_buffer.save( "images/output_image.ppm" );
 
 	return EXIT_SUCCESS;
 }

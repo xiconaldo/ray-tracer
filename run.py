@@ -18,7 +18,7 @@ seconds = (total%60)
 print("Rendering time: ", str(hours), "h", str(minutes), "min", str(seconds), "s")
 
 try:
-	subprocess.call(["convert", "output_image.ppm", "output_image.jpg"])
-	subprocess.call(["eog", "output_image.jpg"])
+	subprocess.call(["convert", "images/output_image.ppm", "images/output_image.jpg"])
+	subprocess.call(["eog", "images/output_image.jpg"])
 except:
 	pass

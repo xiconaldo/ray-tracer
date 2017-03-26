@@ -26,83 +26,131 @@ bool Scene::intersect( const Ray &ray,
     return intersection_result;
 }
 
-void Scene::load( void ) 
-{
-	// 1
-	// for(int i = 0; i < 3; i++){
-	// 	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ 
-	//  																glm::vec3{-0.3f + cos(i/3.0f*2*M_PI)*0.5f, -0.3f + sin(i/3.0f*2*M_PI)*0.5f, -1.4f + i*0.4f},
-	//  																glm::vec3{ 0.3f + cos(i/3.0f*2*M_PI)*0.5f, -0.3f + sin(i/3.0f*2*M_PI)*0.5f, -1.4f + i*0.4f},
-	//  																glm::vec3{ 0.0f + cos(i/3.0f*2*M_PI)*0.5f,  0.3f + sin(i/3.0f*2*M_PI)*0.5f, -1.4f + i*0.4f} }));
+void Scene::load( void ) {
 
-	// 		primitives_.back()->color = glm::vec3{ rand()%256/255.0, 
-	// 										  rand()%256/255.0,
-	// 										  rand()%256/255.0};
-	// }
+	//LEFT
+	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{-2.0f, -2.0f, -3.0f},
+														  				glm::vec3{-2.0f,  2.0f,  3.0f},
+														  				glm::vec3{-2.0f,  2.0f, -3.0f} }));
+
+	primitives_.back()->color = glm::vec3{ 1.0f, 0.0f, 0.0f};
+
+	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{-2.0f, -2.0f, -3.0f},
+														  				glm::vec3{-2.0f,  2.0f,  3.0f},
+														  				glm::vec3{-2.0f, -2.0f,  3.0f} }));
+
+	primitives_.back()->color = glm::vec3{ 1.0f, 0.0f, 0.0f};
 
 
-	 
-	 // primitives_.push_back(Primitive::PrimitiveUniquePtr(new Sphere{
-		// 														glm::vec3{ -0.5f, 0.5f, -2.0f},
-		// 														0.4f} ));
-	 // primitives_.push_back(Primitive::PrimitiveUniquePtr(new Sphere{
-		// 														glm::vec3{ -0.5f, -0.5f, -2.0f},
-		// 														0.4f} ));
-	 // primitives_.push_back(Primitive::PrimitiveUniquePtr(new Sphere{
-		// 														glm::vec3{ 0.5f, -0.5f, -2.0f},
-		// 														0.4f} ));
-	 // primitives_.push_back(Primitive::PrimitiveUniquePtr(new Sphere{
-		// 														glm::vec3{ 0.5f, 0.5f, -2.0f},
-		// 														0.4f} ));
+	// RIGHT
+	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f, -2.0f, -3.0f},
+														  				glm::vec3{ 2.0f,  2.0f,  3.0f},
+														  				glm::vec3{ 2.0f,  2.0f, -3.0f} }));
 
-	 // primitives_.push_back(Primitive::PrimitiveUniquePtr(new Sphere{
-		// 														glm::vec3{ -0.5f, 0.5f, -1.0f},
-		// 														0.4f} ));
-	 // primitives_.push_back(Primitive::PrimitiveUniquePtr(new Sphere{
-		// 														glm::vec3{ -0.5f, -0.5f, -1.0f},
-		// 														0.4f} ));
-	 // primitives_.push_back(Primitive::PrimitiveUniquePtr(new Sphere{
-		// 														glm::vec3{ 0.5f, -0.5f, -1.0f},
-		// 														0.4f} ));
-	 // primitives_.push_back(Primitive::PrimitiveUniquePtr(new Sphere{
-		// 														glm::vec3{ 0.5f, 0.5f, -1.0f},
-		// 														0.4f} ));
+	primitives_.back()->color = glm::vec3{ 0.0f, 0.0f, 1.0f};
 
-	primitives_.push_back(Primitive::PrimitiveUniquePtr(new Sphere{
-																glm::vec3{ 0.0f, 2.0f, 0.0f},
-																1.0f} ));
+	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f, -2.0f, -3.0f},
+														  				glm::vec3{ 2.0f,  2.0f,  3.0f},
+														  				glm::vec3{ 2.0f, -2.0f,  3.0f} }));
+
+	primitives_.back()->color = glm::vec3{ 0.0f, 0.0f, 1.0f};
+
+
+	// BACK
+	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f, -2.0f, -2.0f},
+														  				glm::vec3{ 2.0f,  2.0f, -2.0f},
+														  				glm::vec3{-2.0f,  2.0f, -2.0f} }));
+
+	primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
+
+	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f, -2.0f, -2.0f},
+														  				glm::vec3{-2.0f, -2.0f, -2.0f},
+														  				glm::vec3{-2.0f,  2.0f, -2.0f} }));
+
+	primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
+
+
+	// DOWN
+
+	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f, -2.0f,  2.0f},
+														  				glm::vec3{ 2.0f, -2.0f, -2.0f},
+														  				glm::vec3{-2.0f, -2.0f, -2.0f} }));
+
+	primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
+
+	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{-2.0f, -2.0f, -2.0f},
+														  				glm::vec3{ 2.0f, -2.0f,  2.0f},
+														  				glm::vec3{-2.0f, -2.0f,  2.0f} }));
+
+	primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
+
+
+	// UP
+
+	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f,  2.0f,  3.0f},
+														  				glm::vec3{ 2.0f,  2.0f, -3.0f},
+														  				glm::vec3{-2.0f,  2.0f, -3.0f} }));
+
+	primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
+
+	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{-2.0f,  2.0f, -3.0f},
+														  				glm::vec3{ 2.0f,  2.0f,  3.0f},
+														  				glm::vec3{-2.0f,  2.0f,  3.0f} }));
+
+	primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
+
+
+	// LIGHT
+
+	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 1.0f,  2.0f,  1.0f},
+														  				glm::vec3{ 1.0f,  2.0f, -1.0f},
+														  				glm::vec3{-1.0f,  2.0f, -1.0f} }));
 
 	primitives_.back()->color = glm::vec3{ 30.0f, 30.0f, 30.0f};
 	primitives_.back()->emiter = true;
 
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec3> normals;
-	std::vector<glm::vec2> uvs;
-	std::vector<Indexed_Face> faces;
-	int vertex_count;
-	int normal_count; 
-	int uv_count;
-	int face_count;
+	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{-1.0f,  2.0f, -1.0f},
+														  				glm::vec3{ 1.0f,  2.0f,  1.0f},
+														  				glm::vec3{-1.0f,  2.0f,  1.0f} }));
 
-	load_data(	"monkey90.obj",
-				vertices, 
-				normals, 
-				uvs, 
-				faces, 
-				vertex_count, 
-				normal_count, 
-				uv_count, 
-				face_count); 
+	primitives_.back()->color = glm::vec3{ 30.0f, 30.0f, 30.0f};
+	primitives_.back()->emiter = true;
+	
 
-	for(int i = 0; i < face_count; i++){
-		primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ 
-																	vertices[faces[i].vertices[0]-1],
-																	vertices[faces[i].vertices[1]-1],
-																	vertices[faces[i].vertices[2]-1] }));
+
+	// primitives_.push_back(Primitive::PrimitiveUniquePtr(new Sphere{
+	// 															glm::vec3{ 0.0f, 2.0f, 0.0f},
+	// 															1.0f} ));
+
+	// primitives_.back()->color = glm::vec3{ 30.0f, 30.0f, 30.0f};
+	// primitives_.back()->emiter = true;
+
+	// std::vector<glm::vec3> vertices;
+	// std::vector<glm::vec3> normals;
+	// std::vector<glm::vec2> uvs;
+	// std::vector<Indexed_Face> faces;
+	// int vertex_count;
+	// int normal_count; 
+	// int uv_count;
+	// int face_count;
+
+	// load_data(	"monkey90.obj",
+	// 			vertices, 
+	// 			normals, 
+	// 			uvs, 
+	// 			faces, 
+	// 			vertex_count, 
+	// 			normal_count, 
+	// 			uv_count, 
+	// 			face_count); 
+
+	// for(int i = 0; i < face_count; i++){
+	// 	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ 
+	// 																vertices[faces[i].vertices[0]-1] + glm::vec3(0.0f, 0.0f, 1.0f),
+	// 																vertices[faces[i].vertices[1]-1] + glm::vec3(0.0f, 0.0f, 1.0f),
+	// 																vertices[faces[i].vertices[2]-1] + glm::vec3(0.0f, 0.0f, 1.0f) }));
 		
-		primitives_.back()->color = glm::vec3{ rand()%256/255.0, 
-											  rand()%256/255.0,
-											  rand()%256/255.0};
-	}
+	// 	primitives_.back()->color = glm::vec3{ 0.5f, 0.5f, 0.5f};
+	// }
 }
 

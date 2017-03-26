@@ -10,13 +10,31 @@ RayTracer::RayTracer( Camera &camera,
 		buffer_( buffer )
 {}
 
-void RayTracer::integrate( void )
+void RayTracer::integrate( const int num_threads, const int num_rays)
 {
-	const int num_rays = 100; // number of rays
+	std::thread **threads = new std::thread*[num_threads];
+	std::thread control{&RayTracer::print_progress, this};
+	
+	for(int i = 0; i < num_threads; i++)
+		threads[i] = new std::thread{&RayTracer::integrate_parallel, this, num_rays};
 
-	std::default_random_engine generator;
-	std::uniform_real_distribution<float> distribution_x(0.0f, 1.0f);
-	std::uniform_real_distribution<float> distribution_y(0.0f, 1.0f);
+	for(int i = 0; i < num_threads; i++){
+		threads[i]->join();
+		delete threads[i];
+	}
+	delete[] threads;
+
+	control.join();
+}
+
+void RayTracer::integrate_parallel( const int num_rays )
+{
+	//std::default_random_engine generator;
+	std::mt19937 generator;
+	std::uniform_real_distribution<float> dist_x(0.0f, 1.0f);
+	std::uniform_real_distribution<float> dist_y(0.0f, 1.0f);
+	std::uniform_real_distribution<float> dist_theta(0.0f, 2.0f * M_PI);
+	std::uniform_real_distribution<float> dist_phi(0.0f, 1.0f);
 
 	IntersectionRecord intersection_record;
 	
@@ -49,12 +67,12 @@ void RayTracer::integrate( void )
 
 				for(int i = 0; i < num_rays; i++){
 
-					float x_pad = distribution_x(generator);
-					float y_pad = distribution_y(generator);
+					float x_pad = dist_x(generator);
+					float y_pad = dist_y(generator);
 
 					Ray ray{ camera_.getWorldSpaceRay( glm::vec2{ x + x_pad, y + y_pad } ) };
 
-					buffer_.buffer_data_[x][y] += L(ray, 0);			
+					buffer_.buffer_data_[x][y] += L(ray, 0, dist_theta, dist_phi, generator);			
 				}
 
 				buffer_.buffer_data_[x][y] = buffer_.buffer_data_[x][y] / float(num_rays);
@@ -65,7 +83,10 @@ void RayTracer::integrate( void )
 	}
 }
 
-glm::vec3 RayTracer::L(const Ray& r, int depth){
+glm::vec3 RayTracer::L(const Ray& r, int depth, 
+					   std::uniform_real_distribution<float>& dist_theta,
+					   std::uniform_real_distribution<float>& dist_phi,
+					   std::mt19937& generator){
 
 	glm::vec3 Lo = glm::vec3{0.0f};
 	IntersectionRecord intersection_record;
@@ -79,15 +100,24 @@ glm::vec3 RayTracer::L(const Ray& r, int depth){
 
 			else{
 
-				float a, b, x, y, z;
+				float theta, phi, x, y, z;
 				
-				a = 2 * M_PI * rand() / float(RAND_MAX);
-				b = acos(1 - rand() / float(RAND_MAX));
-				x = sin(a) * sin(b);
-				y = sin(a) * cos(b);
-				z = sin(b);
+				theta = dist_theta(generator);
+				phi = acos(dist_phi(generator));
+				// theta = 2 * M_PI * rand() / float(RAND_MAX);
+				// phi = acos(rand() / float(RAND_MAX));
+				
+				x = sin(phi) * cos(theta);
+				y = sin(phi) * sin(theta);
+				z = cos(phi);
 
-				glm::vec3 new_ray = glm::normalize(glm::vec3(x, y, z));
+				// WRONG!!!
+				// x = sin(theta) * sin(phi);
+				// y = sin(theta) * cos(phi);
+				// z = sin(phi);
+
+				// glm::vec3 new_ray = glm::normalize(glm::vec3(x, y, z));
+				glm::vec3 new_ray = glm::vec3(x, y, z);
 
 				float cosTheta = glm::dot(new_ray, intersection_record.normal_);
 				
@@ -98,7 +128,7 @@ glm::vec3 RayTracer::L(const Ray& r, int depth){
 
 				Ray reflect{ intersection_record.position_, new_ray };
 
-				Lo = 2.0f * intersection_record.object->color * L(reflect, ++depth) * cosTheta;
+				Lo = 2.0f * intersection_record.object->color * L(reflect, ++depth, dist_theta, dist_phi, generator) * cosTheta;
 			}
 		}
 
@@ -126,4 +156,5 @@ void RayTracer::print_progress(){
 		std::this_thread::sleep_for (std::chrono::milliseconds(100));
 	}
 	
+	std::clog << std::endl;	
 }

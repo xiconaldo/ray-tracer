@@ -4,5 +4,6 @@
 *.obj
 *.mtl
 *.jpg
+*.txt
 blog/*
 swpathtracer
