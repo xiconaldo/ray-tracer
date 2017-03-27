@@ -26,104 +26,110 @@ bool Scene::intersect( const Ray &ray,
     return intersection_result;
 }
 
+glm::vec3 diffuse( void ){ return glm::vec3{0.5f, 0.5f, 0.5f} / float(M_PI);}
+
 void Scene::load( void ) {
-/*
-	//LEFT
-	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{-2.0f, -2.0f, -2.0f},
-														  				glm::vec3{-2.0f,  2.0f,  2.0f},
-														  				glm::vec3{-2.0f,  2.0f, -2.0f} }));
 
-	primitives_.back()->color = glm::vec3{ 1.0f, 0.0f, 0.0f};
+	// //LEFT
+	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{-2.0f, -2.0f, -2.0f},
+	// 													  				glm::vec3{-2.0f,  2.0f,  2.0f},
+	// 													  				glm::vec3{-2.0f,  2.0f, -2.0f} }));
 
-	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{-2.0f, -2.0f, -2.0f},
-														  				glm::vec3{-2.0f,  2.0f,  2.0f},
-														  				glm::vec3{-2.0f, -2.0f,  2.0f} }));
+	// primitives_.back()->color = glm::vec3{ 1.0f, 0.0f, 0.0f};
 
-	primitives_.back()->color = glm::vec3{ 1.0f, 0.0f, 0.0f};
+	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{-2.0f, -2.0f, -2.0f},
+	// 													  				glm::vec3{-2.0f,  2.0f,  2.0f},
+	// 													  				glm::vec3{-2.0f, -2.0f,  2.0f} }));
 
-
-	// RIGHT
-	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f, -2.0f, -2.0f},
-														  				glm::vec3{ 2.0f,  2.0f,  2.0f},
-														  				glm::vec3{ 2.0f,  2.0f, -2.0f} }));
-
-	primitives_.back()->color = glm::vec3{ 0.0f, 0.0f, 1.0f};
-
-	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f, -2.0f, -2.0f},
-														  				glm::vec3{ 2.0f,  2.0f,  2.0f},
-														  				glm::vec3{ 2.0f, -2.0f,  2.0f} }));
-
-	primitives_.back()->color = glm::vec3{ 0.0f, 0.0f, 1.0f};
+	// primitives_.back()->color = glm::vec3{ 1.0f, 0.0f, 0.0f};
 
 
-	// BACK
-	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f, -2.0f, -2.0f},
-														  				glm::vec3{ 2.0f,  2.0f, -2.0f},
-														  				glm::vec3{-2.0f,  2.0f, -2.0f} }));
+	// // RIGHT
+	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f, -2.0f, -2.0f},
+	// 													  				glm::vec3{ 2.0f,  2.0f,  2.0f},
+	// 													  				glm::vec3{ 2.0f,  2.0f, -2.0f} }));
 
-	primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
+	// primitives_.back()->color = glm::vec3{ 0.0f, 0.0f, 1.0f};
 
-	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f, -2.0f, -2.0f},
-														  				glm::vec3{-2.0f, -2.0f, -2.0f},
-														  				glm::vec3{-2.0f,  2.0f, -2.0f} }));
+	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f, -2.0f, -2.0f},
+	// 													  				glm::vec3{ 2.0f,  2.0f,  2.0f},
+	// 													  				glm::vec3{ 2.0f, -2.0f,  2.0f} }));
 
-	primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
-
-
-	// BOTTOM
-
-	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f, -2.0f,  2.0f},
-														  				glm::vec3{ 2.0f, -2.0f, -2.0f},
-														  				glm::vec3{-2.0f, -2.0f, -2.0f} }));
-
-	primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
-
-	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{-2.0f, -2.0f, -2.0f},
-														  				glm::vec3{ 2.0f, -2.0f,  2.0f},
-														  				glm::vec3{-2.0f, -2.0f,  2.0f} }));
-
-	primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
+	// primitives_.back()->color = glm::vec3{ 0.0f, 0.0f, 1.0f};
 
 
-	// TOP
+	// // BACK
+	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f, -2.0f, -2.0f},
+	// 													  				glm::vec3{ 2.0f,  2.0f, -2.0f},
+	// 													  				glm::vec3{-2.0f,  2.0f, -2.0f} }));
 
-	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f,  2.0f,  2.0f},
-														  				glm::vec3{ 2.0f,  2.0f, -2.0f},
-														  				glm::vec3{-2.0f,  2.0f, -2.0f} }));
+	// primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
 
-	primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
+	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f, -2.0f, -2.0f},
+	// 													  				glm::vec3{-2.0f, -2.0f, -2.0f},
+	// 													  				glm::vec3{-2.0f,  2.0f, -2.0f} }));
 
-	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{-2.0f,  2.0f, -2.0f},
-														  				glm::vec3{ 2.0f,  2.0f,  2.0f},
-														  				glm::vec3{-2.0f,  2.0f,  2.0f} }));
-
-	primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
+	// primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
 
 
-	// LIGHT
+	// // BOTTOM
 
-	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 0.5f,  1.99f,  0.5f},
-														  				glm::vec3{ 0.5f,  1.99f, -0.5f},
-														  				glm::vec3{-0.5f,  1.99f, -0.5f} }));
+	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f, -2.0f,  2.0f},
+	// 													  				glm::vec3{ 2.0f, -2.0f, -2.0f},
+	// 													  				glm::vec3{-2.0f, -2.0f, -2.0f} }));
 
-	primitives_.back()->color = glm::vec3{ 60.0f, 60.0f, 60.0f};
-	primitives_.back()->emiter = true;
+	// primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
 
-	primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{-0.5f,  1.99f, -0.5f},
-														  				glm::vec3{ 0.5f,  1.99f,  0.5f},
-														  				glm::vec3{-0.5f,  1.99f,  0.5f} }));
+	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{-2.0f, -2.0f, -2.0f},
+	// 													  				glm::vec3{ 2.0f, -2.0f,  2.0f},
+	// 													  				glm::vec3{-2.0f, -2.0f,  2.0f} }));
 
-	primitives_.back()->color = glm::vec3{ 60.0f, 60.0f, 60.0f};
-	primitives_.back()->emiter = true;
+	// primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
+
+
+	// // TOP
+
+	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f,  2.0f,  2.0f},
+	// 													  				glm::vec3{ 2.0f,  2.0f, -2.0f},
+	// 													  				glm::vec3{-2.0f,  2.0f, -2.0f} }));
+
+	// primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
+
+	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{-2.0f,  2.0f, -2.0f},
+	// 													  				glm::vec3{ 2.0f,  2.0f,  2.0f},
+	// 													  				glm::vec3{-2.0f,  2.0f,  2.0f} }));
+
+	// primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
+
+
+	// // LIGHT
+
+	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 0.5f,  1.99f,  0.5f},
+	// 													  				glm::vec3{ 0.5f,  1.99f, -0.5f},
+	// 													  				glm::vec3{-0.5f,  1.99f, -0.5f} }));
+
+	// primitives_.back()->color = glm::vec3{ 60.0f, 60.0f, 60.0f};
+	// primitives_.back()->emiter = true;
+
+	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{-0.5f,  1.99f, -0.5f},
+	// 													  				glm::vec3{ 0.5f,  1.99f,  0.5f},
+	// 													  				glm::vec3{-0.5f,  1.99f,  0.5f} }));
+
+	// primitives_.back()->color = glm::vec3{ 60.0f, 60.0f, 60.0f};
+	// primitives_.back()->emiter = true;
 	
-*/
+
+	Material m2 = {glm::vec3{30.0f, 30.0f, 30.0f}, nullptr};
 
 	primitives_.push_back(Primitive::PrimitiveUniquePtr(new Sphere{
 																glm::vec3{ 0.0f, 2.0f, 0.0f},
 																1.0f} ));
 
-	primitives_.back()->color = glm::vec3{ 30.0f, 30.0f, 30.0f};
+	//primitives_.back()->color = glm::vec3{ 30.0f, 30.0f, 30.0f};
+	primitives_.back()->material = m2;
 	primitives_.back()->emiter = true;
+
+	Material m1 = {glm::vec3{0.0f, 0.0f, 0.0f}, diffuse};
 
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec3> normals;
@@ -150,7 +156,8 @@ void Scene::load( void ) {
 																	vertices[faces[i].vertices[1]-1] /*+ glm::vec3(0.0f, 0.0f, 1.0f) */,
 																	vertices[faces[i].vertices[2]-1] /*+ glm::vec3(0.0f, 0.0f, 1.0f) */}));
 		
-		primitives_.back()->color = glm::vec3{ 0.5f, 0.5f, 0.5f};
+		//primitives_.back()->color = glm::vec3{ 0.5f, 0.5f, 0.5f};
+		primitives_.back()->material = m1;
 	}
 }
 

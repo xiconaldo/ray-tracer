@@ -2,7 +2,7 @@ EXECUTABLE = swpathtracer
 
 CXX = g++
 
-CXXFLAGS = -std=c++11 -Wall -Wextra -Wpedantic -fopenmp
+CXXFLAGS = -std=c++11 -Wall -Wextra -Wpedantic
 
 ifeq ($(DEBUG), 1)
 CXXFLAGS += -DDEBUG -O0 -g3

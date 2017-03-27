@@ -11,6 +11,7 @@
 #include "sphere.h" 
 #include "triangle.h"
 #include "loader.h"
+#include "object.h"
 
 class Scene
 {
@@ -26,6 +27,8 @@ public:
     void load( void );
 
     std::vector< Primitive::PrimitiveUniquePtr > primitives_;
+
+    std::vector< Object::ObjectUniquePtr > objects_;
 
 };
 

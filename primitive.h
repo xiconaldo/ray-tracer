@@ -5,6 +5,7 @@
 
 #include "ray.h"
 #include "intersection_record.h"
+#include "material.h"
 
 class Primitive
 {
@@ -14,6 +15,10 @@ public:
 
     glm::vec3 color = glm::vec3(0.5f, 0.5f, 0.5f);
     bool emiter = false;
+
+    Material material;
+
+    int material_index;
 
     Primitive( void );
 

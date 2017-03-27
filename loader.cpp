@@ -149,7 +149,6 @@ void load_data(	const std::string& obj_name,
 			int count = count_symbol(line);
 			int first = index_block.find("/");
 			int last = index_block.rfind("/");
-			int int_ignore;
 			char char_ignore;
 
 			faces[face_index].vertex_count = count;
@@ -224,7 +223,7 @@ void group_data(const std::vector<glm::vec3> &vertices,
 	int n_vertices;
 	face_count = 0;
 
-	for(int i = 0; i < faces.size(); i++){
+	for(unsigned int i = 0; i < faces.size(); i++){
 
 		n_vertices = faces[i].vertex_count;
 

@@ -94,8 +94,9 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 	if(depth < 5)
 		if ( scene_.intersect( r, intersection_record ) ){
 
-			if(intersection_record.object->emiter){
-				Lo = intersection_record.object->color;
+			if(!intersection_record.object->material.brdf){
+				//Lo = intersection_record.object->color;
+				Lo = intersection_record.object->material.emittance_;
 			}
 
 			else{
@@ -128,7 +129,8 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 
 				Ray reflect{ intersection_record.position_, new_ray };
 
-				Lo = 2.0f * intersection_record.object->color * L(reflect, ++depth, dist_theta, dist_phi, generator) * cosTheta;
+				Lo = 2.0f * float(M_PI) * intersection_record.object->material.brdf() * L(reflect, ++depth, dist_theta, dist_phi, generator) * cosTheta;
+				//Lo = 2.0f * intersection_record.object->color * L(reflect, ++depth, dist_theta, dist_phi, generator) * cosTheta;
 			}
 		}
 
