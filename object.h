@@ -3,6 +3,7 @@
 
 #include "primitive.h"
 #include "material.h"
+#include <vector>
 
 class Object
 {
@@ -12,7 +13,7 @@ public:
 
     std::vector< Primitive::PrimitiveUniquePtr > primitives_;
 
-    std::vector< Material > material_list;
+    static std::vector< Material > material_list;
 
 };
 

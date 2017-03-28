@@ -17,7 +17,7 @@ print("\nStarted at %s\n" %now)
 start = time.time()
 
 try:
-	subprocess.call(["./swpathtracer"] + sys.argv[1:])
+	subprocess.call(["./swpathtracer"] + sys.argv[1:], stdout = sys.stdout)
 except:
 	pass
 
