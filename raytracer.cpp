@@ -36,7 +36,7 @@ void RayTracer::integrate_parallel( const int num_rays )
 	std::uniform_real_distribution<float> dist_theta(0.0f, 2.0f * M_PI);
 	std::uniform_real_distribution<float> dist_phi(0.0f, 1.0f);
 
-	IntersectionRecord intersection_record;
+	// IntersectionRecord intersection_record;
 	
 	int init_x;
 	int init_y;
@@ -76,6 +76,13 @@ void RayTracer::integrate_parallel( const int num_rays )
 				}
 
 				buffer_.buffer_data_[x][y] = buffer_.buffer_data_[x][y] / float(num_rays);
+
+				// float I = (buffer_.buffer_data_[x][y].r + buffer_.buffer_data_[x][y].g + buffer_.buffer_data_[x][y].b)/3.0f;
+				// float H = I * 2 * M_PI;
+				// float S = 1.0f;
+
+				
+
 				glm::clamp(buffer_.buffer_data_[x][y], glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{1.0f, 1.0f, 1.0f});
 			}
 		}
@@ -133,7 +140,8 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 
 				Ray reflect{ intersection_record.position_ + 0.001f * intersection_record.normal_, new_ray };
 
-				Lo = 2.0f * float(M_PI) * 
+				Lo = material.emittance_ +
+					 2.0f * float(M_PI) * 
 					 material.brdf() * 
 					 L(reflect, ++depth, dist_theta, dist_phi, generator) * 
 					 cosTheta;
@@ -149,6 +157,9 @@ void RayTracer::print_progress(){
 
 	int work_block;
 	int completed_blocks;
+	time_t initial_time = time(NULL);
+	int remaining_time = 0;
+	int prev_total_time = 0;
 
 	while(true){
 
@@ -156,18 +167,30 @@ void RayTracer::print_progress(){
 		completed_blocks = work_block > 3 ? work_block-4 : 0;
 
 		std::stringstream progress_stream;
-		progress_stream << "\rProgress .........................: "
+		progress_stream << "\r\rProgress .........................: "
 						<< std::fixed << std::setw( 6 )
 						<< std::setprecision( 2 )
 						<< 0.390625 * completed_blocks
 						<< "% | "
 						<< completed_blocks << "/" << 256;
 
+		if(completed_blocks){
+
+			prev_total_time = 256 * difftime(time(NULL), initial_time) / completed_blocks;
+			remaining_time =  prev_total_time - difftime(time(NULL), initial_time);
+
+			progress_stream << " | "
+							<< remaining_time/3600 << " h " 
+			 				<< (remaining_time/60)%60 << " min "
+			 				<< remaining_time%60 << " s   ";
+		}
+
 		std::clog << progress_stream.str();
 
 		if(work_block == 260) break;
-		std::this_thread::sleep_for (std::chrono::milliseconds(1000));
-	}
+		std::this_thread::sleep_for (std::chrono::seconds(prev_total_time * 0.05 < 2 ? 2 : prev_total_time * 0.05 > 5 ? 5 : int(prev_total_time * 0.05)));
+		//std::this_thread::sleep_for (std::chrono::seconds(2));
+	}	
 	
 	std::clog << std::endl;	
 }

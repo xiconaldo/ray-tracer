@@ -11,6 +11,8 @@ struct Material
     static glm::vec3 diffuse_red( void );
     static glm::vec3 diffuse_gray( void );
 	static glm::vec3 diffuse_green( void );
+	static glm::vec3 diffuse_yellow( void );
+	static glm::vec3 diffuse_white( void );
 };
 
 #endif /* MTERIAL_H_ */

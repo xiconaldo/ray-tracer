@@ -4,17 +4,17 @@ int main( int argc, char* argv[] )
 {
 	int spp = 10;
 	int num_threads = 4;
-	std::string output_file = "images/output_image.ppm";
+	std::string output_file = "images_ppm/output_image.ppm";
 	
 	if(argc > 1)
 		spp = strtol(argv[1], NULL, 10);
 	if(argc > 2)
 		num_threads = strtol(argv[2], NULL, 10);
 	if(argc > 3)
-		output_file = "images/" + std::string(argv[3]) + ".ppm";
+		output_file = "images_ppm/" + std::string(argv[3]) + ".ppm";
 
 	unsigned int x_resolution = 512;
-	unsigned int y_resolution = 512;
+	unsigned int y_resolution = 512	;
 	
 	// PerspectiveCamera camera{  -1.0f, 
 	// 							1.0f, 

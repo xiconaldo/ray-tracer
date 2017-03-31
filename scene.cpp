@@ -90,22 +90,22 @@ void Scene::load( void ) {
 	// 	objects_.back()->primitives_.back()->material_index = 0;
 	// }
 
-	
+	Material m0 = {glm::vec3{0.0f}, Material::diffuse_white};
 	Material m1 = {glm::vec3{0.0f}, Material::diffuse_gray};
 	Material m2 = {glm::vec3{0.0f}, Material::diffuse_red};
 	Material m3 = {glm::vec3{0.0f}, Material::diffuse_green};
-	Material m4 = {glm::vec3{37.0f, 32.0f, 24.0f}, nullptr};
+	Material m4 = {glm::vec3{37.0f, 32.0f, 24.0f}, Material::diffuse_yellow}; //24.0f
 
 	Object::material_list.push_back(m1);
 	Object::material_list.push_back(m2);
 	Object::material_list.push_back(m3);
 	Object::material_list.push_back(m4);
+	Object::material_list.push_back(m0);
 
 	loadObject("objects/cornell_box01.obj", 0);
 	loadObject("objects/cornell_box02.obj", 1);
 	loadObject("objects/cornell_box03.obj", 2);
-	loadObject("objects/cornell_box04.obj", 3);
-
+	loadObject("objects/cornell_box04.obj", 3);	
 }
 
 void Scene::loadObject(const std::string file_name, int material_index){
