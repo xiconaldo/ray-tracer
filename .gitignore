@@ -1,10 +1,12 @@
 *.o
 *.ppm
 *.d
-*.obj
 *.mtl
 *.jpg
 *.txt
 *.blend
 blog/*
+images/*
+objects/*.blend
+objects/*.mtl
 swpathtracer

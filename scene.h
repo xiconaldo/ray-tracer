@@ -26,6 +26,8 @@ public:
 
     void load( void );
 
+    void loadObject(const std::string file_name, int material_index);
+
     std::vector< Primitive::PrimitiveUniquePtr > primitives_;
 
     std::vector< Object::ObjectUniquePtr > objects_;

@@ -42,114 +42,73 @@ bool Scene::intersect( const Ray &ray,
 	return intersection_result;
 }
 
-glm::vec3 diffuse( void ){ return glm::vec3{0.5f, 0.5f, 0.5f} / float(M_PI);}
-
 void Scene::load( void ) {
-
-	// //LEFT
-	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{-2.0f, -2.0f, -2.0f},
-	// 													  				glm::vec3{-2.0f,  2.0f,  2.0f},
-	// 													  				glm::vec3{-2.0f,  2.0f, -2.0f} }));
-
-	// primitives_.back()->color = glm::vec3{ 1.0f, 0.0f, 0.0f};
-
-	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{-2.0f, -2.0f, -2.0f},
-	// 													  				glm::vec3{-2.0f,  2.0f,  2.0f},
-	// 													  				glm::vec3{-2.0f, -2.0f,  2.0f} }));
-
-	// primitives_.back()->color = glm::vec3{ 1.0f, 0.0f, 0.0f};
-
-
-	// // RIGHT
-	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f, -2.0f, -2.0f},
-	// 													  				glm::vec3{ 2.0f,  2.0f,  2.0f},
-	// 													  				glm::vec3{ 2.0f,  2.0f, -2.0f} }));
-
-	// primitives_.back()->color = glm::vec3{ 0.0f, 0.0f, 1.0f};
-
-	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f, -2.0f, -2.0f},
-	// 													  				glm::vec3{ 2.0f,  2.0f,  2.0f},
-	// 													  				glm::vec3{ 2.0f, -2.0f,  2.0f} }));
-
-	// primitives_.back()->color = glm::vec3{ 0.0f, 0.0f, 1.0f};
-
-
-	// // BACK
-	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f, -2.0f, -2.0f},
-	// 													  				glm::vec3{ 2.0f,  2.0f, -2.0f},
-	// 													  				glm::vec3{-2.0f,  2.0f, -2.0f} }));
-
-	// primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
-
-	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f, -2.0f, -2.0f},
-	// 													  				glm::vec3{-2.0f, -2.0f, -2.0f},
-	// 													  				glm::vec3{-2.0f,  2.0f, -2.0f} }));
-
-	// primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
-
-
-	// // BOTTOM
-
-	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f, -2.0f,  2.0f},
-	// 													  				glm::vec3{ 2.0f, -2.0f, -2.0f},
-	// 													  				glm::vec3{-2.0f, -2.0f, -2.0f} }));
-
-	// primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
-
-	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{-2.0f, -2.0f, -2.0f},
-	// 													  				glm::vec3{ 2.0f, -2.0f,  2.0f},
-	// 													  				glm::vec3{-2.0f, -2.0f,  2.0f} }));
-
-	// primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
-
-
-	// // TOP
-
-	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 2.0f,  2.0f,  2.0f},
-	// 													  				glm::vec3{ 2.0f,  2.0f, -2.0f},
-	// 													  				glm::vec3{-2.0f,  2.0f, -2.0f} }));
-
-	// primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
-
-	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{-2.0f,  2.0f, -2.0f},
-	// 													  				glm::vec3{ 2.0f,  2.0f,  2.0f},
-	// 													  				glm::vec3{-2.0f,  2.0f,  2.0f} }));
-
-	// primitives_.back()->color = glm::vec3{ 0.8f, 0.8f, 0.8f};
-
-
-	// // LIGHT
-
-	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{ 0.5f,  1.99f,  0.5f},
-	// 													  				glm::vec3{ 0.5f,  1.99f, -0.5f},
-	// 													  				glm::vec3{-0.5f,  1.99f, -0.5f} }));
-
-	// primitives_.back()->color = glm::vec3{ 60.0f, 60.0f, 60.0f};
-	// primitives_.back()->emiter = true;
-
-	// primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ glm::vec3{-0.5f,  1.99f, -0.5f},
-	// 													  				glm::vec3{ 0.5f,  1.99f,  0.5f},
-	// 													  				glm::vec3{-0.5f,  1.99f,  0.5f} }));
-
-	// primitives_.back()->color = glm::vec3{ 60.0f, 60.0f, 60.0f};
-	// primitives_.back()->emiter = true;
 	
-	Material m1 = {glm::vec3{0.0f, 0.0f, 0.0f}, diffuse};
-	Material m2 = {glm::vec3{30.0f, 30.0f, 30.0f}, nullptr};
+	// Material m1 = {glm::vec3{0.0f, 0.0f, 0.0f}, Material::diffuse_gray};
+	// Material m2 = {glm::vec3{30.0f, 30.0f, 30.0f}, nullptr};
+
+	// Object::material_list.push_back(m1);
+	// Object::material_list.push_back(m2);
+
+	// objects_.push_back(Object::ObjectUniquePtr(new Object));
+	// objects_.back()->primitives_.push_back(Primitive::PrimitiveUniquePtr(new Sphere{
+	// 															glm::vec3{ 0.0f, 2.0f, 0.0f},
+	// 															1.0f} ));
+
+	// //primitives_.back()->color = glm::vec3{ 30.0f, 30.0f, 30.0f};
+	// objects_.back()->primitives_.back()->material_index = 1;
+	// //primitives_.back()->emiter = true;
+	
+	// objects_.push_back(Object::ObjectUniquePtr(new Object));
+
+	// std::vector<glm::vec3> vertices;
+	// std::vector<glm::vec3> normals;
+	// std::vector<glm::vec2> uvs;
+	// std::vector<Indexed_Face> faces;
+	// int vertex_count;
+	// int normal_count; 
+	// int uv_count;
+	// int face_count;
+
+	// load_data(	"objects/monkey90.obj",
+	// 			vertices, 
+	// 			normals, 
+	// 			uvs, 
+	// 			faces, 
+	// 			vertex_count, 
+	// 			normal_count, 
+	// 			uv_count, 
+	// 			face_count); 
+
+	// for(int i = 0; i < face_count; i++){
+	// 	objects_.back()->primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ 
+	// 																vertices[faces[i].vertices[0]-1],
+	// 																vertices[faces[i].vertices[1]-1],
+	// 																vertices[faces[i].vertices[2]-1]}));
+		
+	// 	//primitives_.back()->color = glm::vec3{ 0.5f, 0.5f, 0.5f};
+	// 	objects_.back()->primitives_.back()->material_index = 0;
+	// }
+
+	
+	Material m1 = {glm::vec3{0.0f}, Material::diffuse_gray};
+	Material m2 = {glm::vec3{0.0f}, Material::diffuse_red};
+	Material m3 = {glm::vec3{0.0f}, Material::diffuse_green};
+	Material m4 = {glm::vec3{37.0f, 32.0f, 24.0f}, nullptr};
 
 	Object::material_list.push_back(m1);
 	Object::material_list.push_back(m2);
+	Object::material_list.push_back(m3);
+	Object::material_list.push_back(m4);
 
-	objects_.push_back(Object::ObjectUniquePtr(new Object));
-	objects_.back()->primitives_.push_back(Primitive::PrimitiveUniquePtr(new Sphere{
-																glm::vec3{ 0.0f, 2.0f, 0.0f},
-																1.0f} ));
+	loadObject("objects/cornell_box01.obj", 0);
+	loadObject("objects/cornell_box02.obj", 1);
+	loadObject("objects/cornell_box03.obj", 2);
+	loadObject("objects/cornell_box04.obj", 3);
 
-	//primitives_.back()->color = glm::vec3{ 30.0f, 30.0f, 30.0f};
-	objects_.back()->primitives_.back()->material_index = 1;
-	//primitives_.back()->emiter = true;
-	
-	objects_.push_back(Object::ObjectUniquePtr(new Object));
+}
+
+void Scene::loadObject(const std::string file_name, int material_index){
 
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec3> normals;
@@ -159,8 +118,10 @@ void Scene::load( void ) {
 	int normal_count; 
 	int uv_count;
 	int face_count;
+	
+	objects_.push_back(Object::ObjectUniquePtr(new Object));
 
-	load_data(	"monkey90.obj",
+	load_data(	file_name,
 				vertices, 
 				normals, 
 				uvs, 
@@ -172,12 +133,12 @@ void Scene::load( void ) {
 
 	for(int i = 0; i < face_count; i++){
 		objects_.back()->primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ 
-																	vertices[faces[i].vertices[0]-1] /*+ glm::vec3(0.0f, 0.0f, 1.0f)*/,
-																	vertices[faces[i].vertices[1]-1] /*+ glm::vec3(0.0f, 0.0f, 1.0f) */,
-																	vertices[faces[i].vertices[2]-1] /*+ glm::vec3(0.0f, 0.0f, 1.0f) */}));
-		
-		//primitives_.back()->color = glm::vec3{ 0.5f, 0.5f, 0.5f};
-		objects_.back()->primitives_.back()->material_index = 0;
+																	vertices[faces[i].vertices[0]-1],
+																	vertices[faces[i].vertices[1]-1],
+																	vertices[faces[i].vertices[2]-1]}));
+
+		objects_.back()->primitives_.back()->material_index = material_index;
 	}
+
 }
 

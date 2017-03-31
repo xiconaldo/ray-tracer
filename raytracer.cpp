@@ -107,8 +107,10 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 				
 				theta = dist_theta(generator);
 				phi = acos(dist_phi(generator));
-				// theta = 2 * M_PI * rand() / float(RAND_MAX);
-				// phi = acos(rand() / float(RAND_MAX));
+
+				// theta = 2*M_PI*rand()/float(RAND_MAX);
+				// phi = acos(1 - rand()/float(RAND_MAX));
+
 				
 				x = sin(phi) * cos(theta);
 				y = sin(phi) * sin(theta);
@@ -129,7 +131,7 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 					cosTheta = -cosTheta;
 				}
 
-				Ray reflect{ intersection_record.position_, new_ray };
+				Ray reflect{ intersection_record.position_ + 0.001f * intersection_record.normal_, new_ray };
 
 				Lo = 2.0f * float(M_PI) * 
 					 material.brdf() * 
