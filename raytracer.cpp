@@ -75,13 +75,7 @@ void RayTracer::integrate_parallel( const int num_rays )
 					buffer_.buffer_data_[x][y] += L(ray, 0, dist_theta, dist_phi, generator);			
 				}
 
-				buffer_.buffer_data_[x][y] = buffer_.buffer_data_[x][y] / float(num_rays);
-
-				// float I = (buffer_.buffer_data_[x][y].r + buffer_.buffer_data_[x][y].g + buffer_.buffer_data_[x][y].b)/3.0f;
-				// float H = I * 2 * M_PI;
-				// float S = 1.0f;
-
-				
+				buffer_.buffer_data_[x][y] /= float(num_rays);
 
 				glm::clamp(buffer_.buffer_data_[x][y], glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{1.0f, 1.0f, 1.0f});
 			}
@@ -103,7 +97,7 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 
 			Material material = Object::material_list[intersection_record.object->material_index];
 
-			if(!material.brdf){
+			if(!material.brdf_pointer){
 				//Lo = intersection_record.object->color;
 				Lo = material.emittance_;
 			}
