@@ -18,35 +18,44 @@ class RayTracer
 {
 public:
 
-    RayTracer( Camera &camera,
-               const Scene &scene,
-               const glm::vec3 background_color,
-               Buffer &buffer );
+	RayTracer( Camera &camera,
+			   const Scene &scene,
+			   const glm::vec3 background_color,
+			   Buffer &buffer );
 
-    // void integrate( void );
+	// void integrate( void );
 
-    void integrate( const int num_threads = 4, const int num_rays = 10);
+	void integrate( const int num_threads = 4, const int num_rays = 10);
 
-    void integrate_parallel( const int num_rays );
+	void integrate_parallel( const int num_rays );
 
-    glm::vec3 L(const Ray& r, int depth, 
-                 std::uniform_real_distribution<float>& theta,
-                 std::uniform_real_distribution<float>& phi,
-                 std::mt19937& generator);
+	glm::vec3 L(const Ray& r, int depth, 
+				 std::uniform_real_distribution<float>& theta,
+				 std::uniform_real_distribution<float>& phi,
+				 std::mt19937& generator);
 
-    void print_progress();
+	void print_progress();
 
 private:
 
-    const Camera &camera_;
+	const Camera &camera_;
 
-    const Scene &scene_;
+	const Scene &scene_;
 
-    glm::dvec3 background_color_;
+	glm::dvec3 background_color_;
 
-    Buffer &buffer_;
+	Buffer &buffer_;
 
-    std::atomic<int> block{0};
+	std::atomic<int> block{0};
+
+	int num_threads;
+
+	int num_blocks_h;
+	int num_blocks_v;
+	int num_blocks;
+
+	const int block_size_h = 32;
+	const int block_size_v = 32;
 
 };
 

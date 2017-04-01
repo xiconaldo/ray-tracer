@@ -12,6 +12,12 @@ RayTracer::RayTracer( Camera &camera,
 
 void RayTracer::integrate( const int num_threads, const int num_rays)
 {
+	this->num_threads = num_threads;
+
+	num_blocks_h = buffer_.h_resolution_/block_size_h;
+	num_blocks_v = buffer_.v_resolution_/block_size_v;
+	num_blocks = num_blocks_h * num_blocks_v;
+
 	std::thread **threads = new std::thread*[num_threads];
 	std::thread control{&RayTracer::print_progress, this};
 	
@@ -44,19 +50,29 @@ void RayTracer::integrate_parallel( const int num_rays )
 	int max_y;
 
 	int work_block;
-	int block_size_h = buffer_.h_resolution_ / 15; // /16
-	int block_size_v = buffer_.v_resolution_ / 15; // /16
- 
+	// int block_size_h = buffer_.h_resolution_ >> 4; // /16
+	// int block_size_v = buffer_.v_resolution_ >> 4; // /16
+  
 	while(true){
 		work_block = block++;
 
-		if(work_block > 255) break;
+		if(work_block >= num_blocks) break;
 
-		init_x = (work_block & 0x0f) * block_size_h;
-		init_y = ((work_block & 0xf0) >> 4) * block_size_v;
+		init_x = (work_block % num_blocks_h) * block_size_h;
+		init_y = (work_block / num_blocks_h) * block_size_v;
 
-		max_x = std::min(init_x + block_size_h, int(buffer_.h_resolution_));
-		max_y = std::min(init_y + block_size_v, int(buffer_.v_resolution_));
+		if( (work_block % num_blocks_h) < num_blocks_h-1 )
+			max_x = init_x + block_size_h;			
+		else
+			max_x = int(buffer_.h_resolution_);
+			
+		if( (work_block / num_blocks_h) < num_blocks_v-1 )
+			max_y = init_y + block_size_v;
+		else
+			max_y = int(buffer_.v_resolution_);
+
+		// max_x = std::min(init_x + block_size_h, int(buffer_.h_resolution_));
+		// max_y = std::min(init_y + block_size_v, int(buffer_.v_resolution_));
 
 
 		for ( int y = init_y; y < max_y; y++ ){
@@ -158,19 +174,19 @@ void RayTracer::print_progress(){
 	while(true){
 
 		work_block = block;
-		completed_blocks = work_block > 3 ? work_block-4 : 0;
+		completed_blocks = work_block > num_threads-1 ? work_block-num_threads : 0;
 
 		std::stringstream progress_stream;
 		progress_stream << "\r\rProgress .........................: "
 						<< std::fixed << std::setw( 6 )
 						<< std::setprecision( 2 )
-						<< 0.390625 * completed_blocks
+						<< 100.0 * completed_blocks / num_blocks
 						<< "% | "
-						<< completed_blocks << "/" << 256;
+						<< completed_blocks << "/" << num_blocks;
 
 		if(completed_blocks){
 
-			prev_total_time = 256 * difftime(time(NULL), initial_time) / completed_blocks;
+			prev_total_time = num_blocks * difftime(time(NULL), initial_time) / completed_blocks;
 			remaining_time =  prev_total_time - difftime(time(NULL), initial_time);
 
 			progress_stream << " | "
@@ -181,7 +197,7 @@ void RayTracer::print_progress(){
 
 		std::clog << progress_stream.str();
 
-		if(work_block == 260) break;
+		if(work_block == num_blocks+num_threads) break;
 		std::this_thread::sleep_for (std::chrono::seconds(prev_total_time * 0.05 < 2 ? 2 : prev_total_time * 0.05 > 5 ? 5 : int(prev_total_time * 0.05)));
 		//std::this_thread::sleep_for (std::chrono::seconds(2));
 	}	

@@ -32,8 +32,8 @@ print("Rendering time: ", end = "")
 print_dif_time(total)
 print("")
 
-if(len(sys.argv) > 3):
-	output_image = sys.argv[3]
+if(len(sys.argv) > 5):
+	output_image = sys.argv[5]
 else:
 	output_image = "output_image"
 
@@ -41,7 +41,7 @@ try:
 	subprocess.call(["convert", "images_ppm/" + output_image + ".ppm", "images/" + output_image + ".png"])
 	#subprocess.call(["rm", "-f", "images/" + output_image + ".ppm"])	
 
-	if(len(sys.argv) > 4 and sys.argv[4] == "off"):	
+	if(len(sys.argv) > 6 and sys.argv[6] == "off"):	
 		subprocess.call(["sudo", "poweroff"])
 	else:
 		subprocess.call(["eog", "images_ppm/" + output_image + ".ppm"])
