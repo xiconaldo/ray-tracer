@@ -107,6 +107,7 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 
 	glm::vec3 Lo = glm::vec3{0.0f};
 	IntersectionRecord intersection_record;
+	ONB rotation;
 
 	if(depth < 5)
 		if ( scene_.intersect( r, intersection_record ) ){
@@ -130,8 +131,12 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 
 				
 				x = sin(phi) * cos(theta);
-				y = sin(phi) * sin(theta);
-				z = cos(phi);
+				z = sin(phi) * sin(theta);
+				y = cos(phi);
+
+				// x = -cosf(phi)*sinf(theta);
+				// y = sinf(phi);
+				// z = -cosf(phi)*cosf(theta);
 
 				// WRONG!!!
 				// x = sin(theta) * sin(phi);
@@ -141,12 +146,15 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 				// glm::vec3 new_ray = glm::normalize(glm::vec3(x, y, z));
 				glm::vec3 new_ray = glm::vec3(x, y, z);
 
+				rotation.setFromV(intersection_record.normal_);
+				new_ray = rotation.getBasisMatrix() * new_ray;
+
 				float cosTheta = glm::dot(new_ray, intersection_record.normal_);
 				
-				if(cosTheta < 0){
-					new_ray = -new_ray;
-					cosTheta = -cosTheta;
-				}
+				// if(cosTheta < 0){
+				// 	new_ray = -new_ray;
+				// 	cosTheta = -cosTheta;
+				// }
 
 				Ray reflect{ intersection_record.position_ + 0.001f * intersection_record.normal_, new_ray };
 
