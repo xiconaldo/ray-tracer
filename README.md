@@ -4,23 +4,29 @@ A very simple C++11 template code for the development of ray tracers.
 
 # Dependencies
 
-This software depends on the following third party software to be compiled:
-
-- glm version 0.9.7.0 or later (http://glm.g-truc.net).
+This software depends on the GLM library (included) and use a python 3 script to run 
+(included in Ubuntu).
 
 # Compiling and Running
 
-I've compiled and executed this software only in Linux (Ubuntu 14.04).
-These are the steps needed in order to compile the program:
+I've compiled and executed this software only in Linux (Ubuntu 16.04 LTS).
+To compile the program, you need to call 
 
-1. Install the dependencies (i.e. glm).
-2. Download the source code together with the Makefile.
-3. Open the Makefile with a text editor (e.g. vim, gedit, etc.).
-4. Configure the variables CPPFLAGS and LDFLAGS in order to reflect your glm installations.
-5. Save the Makefile.
-6. Call 'make DEBUG=0' at the project root directory.
-7. Done
+$ make DEBUG=0
 
-To render the hardcoded scene, just issue the following command from the project root directory: 
+at the project root directory.
 
-    $ ./swpathtracer
+To render the hardcoded scene, issue the following command from the project root directory: 
+
+$ python3 run.py x_resolution y_resolution spp num_threads output_file_name poweroff_option
+
+where
+
+x_resolution:	   horizontal resolution from the output file that will be generated;
+y_resolution:	   the same as above, but for vertical resolution;
+spp:		 	   samples per pixel. Number of rays launched for each pixel;
+num_threads: 	   number of threads used to process the pixel values;
+output_file_name:  output file name;
+poweroff_option:   if set to "poweroff", the computer will be shuted down at the end of 
+				   the process. Note that in this case, the script must be called with
+				   root privilegies.

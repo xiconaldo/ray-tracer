@@ -3,11 +3,13 @@
 *.d
 *.mtl
 *.jpg
+*.png
 *.txt
 *.blend
 blog/*
 images/*
 images_ppm/*
+images_png/*
 objects/*.blend
 objects/*.mtl
 swpathtracer

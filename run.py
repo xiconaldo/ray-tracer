@@ -38,8 +38,8 @@ else:
 	output_image = "output_image"
 
 try:
-	subprocess.call(["convert", "images_ppm/" + output_image + ".ppm", "images/" + output_image + ".png"])
-	#subprocess.call(["rm", "-f", "images/" + output_image + ".ppm"])	
+	subprocess.call(["mkdir", "-p", "images_ppm", "images_png"])
+	subprocess.call(["convert", "images_ppm/" + output_image + ".ppm", "images_png/" + output_image + ".png"])	
 
 	if(len(sys.argv) > 6 and sys.argv[6] == "off"):	
 		subprocess.call(["sudo", "poweroff"])

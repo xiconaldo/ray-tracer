@@ -6,7 +6,7 @@ int main( int argc, char* argv[] )
 	unsigned int y_resolution = 512;
 	int spp = 10;
 	int num_threads = 4;
-	std::string output_file = "images_ppm/output_image.ppm";
+	std::string output_file = "output_image.ppm";
 	
 	if(argc > 1)
 		x_resolution = strtol(argv[1], NULL, 10);
@@ -17,7 +17,7 @@ int main( int argc, char* argv[] )
 	if(argc > 4)
 		num_threads = strtol(argv[4], NULL, 10);
 	if(argc > 5)
-		output_file = "images_ppm/" + std::string(argv[5]) + ".ppm";
+		output_file = std::string(argv[5]) + ".ppm";
 	
 	// PerspectiveCamera camera{  -1.0f, 
 	// 							1.0f, 
@@ -30,8 +30,8 @@ int main( int argc, char* argv[] )
  //                                1.0f};
  //                                
  
- 	PerspectiveCamera camera{  -1.25f, 
-								1.25f, 
+ 	PerspectiveCamera camera{  -1.25f * x_resolution / y_resolution, 
+								1.25f * x_resolution / y_resolution, 
 							   -1.25f, 
 								1.25f,
 								glm::ivec2{ x_resolution, y_resolution }, 
@@ -46,7 +46,7 @@ int main( int argc, char* argv[] )
 	scene.load();
 
 	Buffer rendering_buffer{ x_resolution, y_resolution };
-	glm::vec3 background_color{ 0.0f, 0.0f, 0.0f };
+	glm::vec3 background_color{ 1.0f, 1.0f, 1.0f };
 
 	// Set up the renderer.
 	RayTracer rt( camera,

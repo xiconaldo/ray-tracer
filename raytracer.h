@@ -27,7 +27,7 @@ public:
 
 	void integrate( const int num_threads = 4, const int num_rays = 10);
 
-	void integrate_parallel( const int num_rays );
+	void integrate_parallel( const int num_rays, const int thread_id );
 
 	glm::vec3 L(const Ray& r, int depth, 
 				 std::uniform_real_distribution<float>& theta,
@@ -56,6 +56,8 @@ private:
 
 	const int block_size_h = 32;
 	const int block_size_v = 32;
+
+	int *progress;
 
 };
 
