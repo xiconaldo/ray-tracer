@@ -22,11 +22,11 @@ $ python3 run.py x_resolution y_resolution spp num_threads output_file_name powe
 
 where
 
-x_resolution:	   horizontal resolution from the output file that will be generated;  
-y_resolution:	   the same as above, but for vertical resolution;  
-spp:		 	   samples per pixel. Number of rays launched for each pixel;  
-num_threads: 	   number of threads used to process the pixel values;  
-output_file_name:  output file name;  
-poweroff_option:   if set to "poweroff", the computer will be shuted down at the end of  
-				   the process. Note that in this case, the script must be called with  
-				   root privilegies.  
+x_resolution:\t\thorizontal resolution from the output file that will be generated;  
+y_resolution:\t\tthe same as above, but for vertical resolution;  
+spp:\t\t\tsamples per pixel. Number of rays launched for each pixel;  
+num_threads:\t\tnumber of threads used to process the pixel values;  
+output_file_name:\toutput file name;  
+poweroff_option:\tif set to "poweroff", the computer will be shuted down at the end of  
+				   \t\t\t\t\tthe process. Note that in this case, the script must be called with  
+				   \t\t\t\t\troot privilegies.  
