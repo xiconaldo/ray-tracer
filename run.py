@@ -39,6 +39,7 @@ else:
 
 try:
 	subprocess.call(["mkdir", "-p", "images_ppm", "images_png"])
+	subprocess.call(["mv", output_image + ".ppm", "images_ppm/"])	
 	subprocess.call(["convert", "images_ppm/" + output_image + ".ppm", "images_png/" + output_image + ".png"])	
 
 	if(len(sys.argv) > 6 and sys.argv[6] == "off"):	
