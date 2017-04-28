@@ -19,6 +19,7 @@ start = time.time()
 try:
 	subprocess.call(["./swpathtracer"] + sys.argv[1:], stdout = sys.stdout)
 except:
+	print("Runtime error")
 	pass
 
 end = time.time()

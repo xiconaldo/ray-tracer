@@ -41,14 +41,12 @@ void RayTracer::integrate( const int num_threads, const int num_rays)
 
 void RayTracer::integrate_parallel( const int num_rays, const int thread_id )
 {
-	//std::default_random_engine generator;
+
 	std::mt19937 generator;
 	std::uniform_real_distribution<float> dist_x(0.0f, 1.0f);
 	std::uniform_real_distribution<float> dist_y(0.0f, 1.0f);
 	std::uniform_real_distribution<float> dist_theta(0.0f, 2.0f * M_PI);
 	std::uniform_real_distribution<float> dist_phi(0.0f, 1.0f);
-
-	// IntersectionRecord intersection_record;
 	
 	int init_x;
 	int init_y;
@@ -56,8 +54,6 @@ void RayTracer::integrate_parallel( const int num_rays, const int thread_id )
 	int max_y;
 
 	int work_block;
-	// int block_size_h = buffer_.h_resolution_ >> 4; // /16
-	// int block_size_v = buffer_.v_resolution_ >> 4; // /16
   
 	while(true){
 		work_block = block++;
@@ -76,9 +72,6 @@ void RayTracer::integrate_parallel( const int num_rays, const int thread_id )
 			max_y = init_y + block_size_v;
 		else
 			max_y = int(buffer_.v_resolution_);
-
-		// max_x = std::min(init_x + block_size_h, int(buffer_.h_resolution_));
-		// max_y = std::min(init_y + block_size_v, int(buffer_.v_resolution_));
 
 
 		for ( int y = init_y; y < max_y; y++ ){
@@ -99,7 +92,18 @@ void RayTracer::integrate_parallel( const int num_rays, const int thread_id )
 
 				buffer_.buffer_data_[x][y] /= float(num_rays);
 
-				glm::clamp(buffer_.buffer_data_[x][y], glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{1.0f, 1.0f, 1.0f});
+				buffer_.buffer_data_[x][y] = glm::clamp(buffer_.buffer_data_[x][y], glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{1.0f, 1.0f, 1.0f});
+
+				// if(thread_id == 0)
+				//  	buffer_.buffer_data_[x][y] = buffer_.buffer_data_[x][y] + glm::vec3{0.2f, -0.4f, -0.4f};
+				// else if(thread_id == 1)
+				//  	buffer_.buffer_data_[x][y] = buffer_.buffer_data_[x][y] + glm::vec3{-0.4f, 0.2f, -0.4f};
+				// else if(thread_id == 2)
+				// 	buffer_.buffer_data_[x][y] = buffer_.buffer_data_[x][y] + glm::vec3{-0.4f, -0.4f, 0.2f};
+				// else if(thread_id == 3)
+				// 	buffer_.buffer_data_[x][y] = buffer_.buffer_data_[x][y] + glm::vec3{0.2f, 0.2f, -0.4f};
+
+				// buffer_.buffer_data_[x][y] = glm::clamp(buffer_.buffer_data_[x][y], glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{1.0f, 1.0f, 1.0f});
 
 				progress[thread_id]++;
 			}

@@ -43,52 +43,6 @@ bool Scene::intersect( const Ray &ray,
 }
 
 void Scene::load( void ) {
-	
-	// Material m1 = {glm::vec3{0.0f, 0.0f, 0.0f}, Material::diffuse_gray};
-	// Material m2 = {glm::vec3{30.0f, 30.0f, 30.0f}, nullptr};
-
-	// Object::material_list.push_back(m1);
-	// Object::material_list.push_back(m2);
-
-	// objects_.push_back(Object::ObjectUniquePtr(new Object));
-	// objects_.back()->primitives_.push_back(Primitive::PrimitiveUniquePtr(new Sphere{
-	// 															glm::vec3{ 0.0f, 2.0f, 0.0f},
-	// 															1.0f} ));
-
-	// //primitives_.back()->color = glm::vec3{ 30.0f, 30.0f, 30.0f};
-	// objects_.back()->primitives_.back()->material_index = 1;
-	// //primitives_.back()->emiter = true;
-	
-	// objects_.push_back(Object::ObjectUniquePtr(new Object));
-
-	// std::vector<glm::vec3> vertices;
-	// std::vector<glm::vec3> normals;
-	// std::vector<glm::vec2> uvs;
-	// std::vector<Indexed_Face> faces;
-	// int vertex_count;
-	// int normal_count; 
-	// int uv_count;
-	// int face_count;
-
-	// load_data(	"objects/monkey90.obj",
-	// 			vertices, 
-	// 			normals, 
-	// 			uvs, 
-	// 			faces, 
-	// 			vertex_count, 
-	// 			normal_count, 
-	// 			uv_count, 
-	// 			face_count); 
-
-	// for(int i = 0; i < face_count; i++){
-	// 	objects_.back()->primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ 
-	// 																vertices[faces[i].vertices[0]-1],
-	// 																vertices[faces[i].vertices[1]-1],
-	// 																vertices[faces[i].vertices[2]-1]}));
-		
-	// 	//primitives_.back()->color = glm::vec3{ 0.5f, 0.5f, 0.5f};
-	// 	objects_.back()->primitives_.back()->material_index = 0;
-	// }
 
 	Material m0 = {glm::vec3{0.0f}, glm::vec3{1.0f}, Material::diffuse};
 	Material m1 = {glm::vec3{0.0f}, glm::vec3{0.725f, 0.71f, 0.68f}, Material::diffuse};
@@ -96,16 +50,24 @@ void Scene::load( void ) {
 	Material m3 = {glm::vec3{0.0f}, glm::vec3{0.14f, 0.45f, 0.091f}, Material::diffuse};
 	Material m4 = {glm::vec3{37.0f, 32.0f, 24.0f}, glm::vec3{0.78f}, Material::diffuse}; //24.0f
 
+	Material m5 = {glm::vec3{0.0f}, glm::vec3{0.5f}, Material::diffuse};
+	Material m6 = {glm::vec3{30.0f}, glm::vec3{0.0f}, nullptr};
+
 	Object::material_list.push_back(m1);
 	Object::material_list.push_back(m2);
 	Object::material_list.push_back(m3);
 	Object::material_list.push_back(m4);
 	Object::material_list.push_back(m0);
+	Object::material_list.push_back(m5);
+	Object::material_list.push_back(m6);
 
 	loadObject("objects/cornell_box01.obj", 0);
 	loadObject("objects/cornell_box02.obj", 1);
 	loadObject("objects/cornell_box03.obj", 2);
 	loadObject("objects/cornell_box04.obj", 3);	
+
+	// loadObject("objects/monkey90.obj", 5);
+	// loadObject("objects/light.obj", 6);
 }
 
 void Scene::loadObject(const std::string file_name, int material_index){
