@@ -3,11 +3,15 @@
 
 #include <glm/glm.hpp>
 
+
 struct Material
 {
+	enum SamplerMode{ UNIFORM, DIRECTIONAL };
+
     glm::vec3 emittance_;
     glm::vec3 reflectance_;
     glm::vec3 (*brdf_pointer)( const glm::vec3& reflectance );
+    SamplerMode mode;
     glm::vec3 brdf( void );
 
  //    static glm::vec3 diffuse_red( void );
@@ -16,6 +20,7 @@ struct Material
 	// static glm::vec3 diffuse_yellow( void );
 	// static glm::vec3 diffuse_white( void );
 	static glm::vec3 diffuse( const glm::vec3& reflectance );
+	static glm::vec3 specular( const glm::vec3& reflectance );
 };
 
 #endif /* MTERIAL_H_ */

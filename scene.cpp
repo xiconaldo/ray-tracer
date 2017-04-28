@@ -44,14 +44,14 @@ bool Scene::intersect( const Ray &ray,
 
 void Scene::load( void ) {
 
-	Material m0 = {glm::vec3{0.0f}, glm::vec3{1.0f}, Material::diffuse};
-	Material m1 = {glm::vec3{0.0f}, glm::vec3{0.725f, 0.71f, 0.68f}, Material::diffuse};
-	Material m2 = {glm::vec3{0.0f}, glm::vec3{0.63f, 0.065f, 0.05f}, Material::diffuse};
-	Material m3 = {glm::vec3{0.0f}, glm::vec3{0.14f, 0.45f, 0.091f}, Material::diffuse};
-	Material m4 = {glm::vec3{37.0f, 32.0f, 24.0f}, glm::vec3{0.78f}, Material::diffuse}; //24.0f
+	Material m0 = {glm::vec3{0.0f}, glm::vec3{1.0f}, Material::diffuse, Material::UNIFORM};
+	Material m1 = {glm::vec3{0.0f}, glm::vec3{0.725f, 0.71f, 0.68f}, Material::diffuse, Material::UNIFORM};
+	Material m2 = {glm::vec3{0.0f}, glm::vec3{0.63f, 0.065f, 0.05f}, Material::diffuse, Material::UNIFORM};
+	Material m3 = {glm::vec3{0.0f}, glm::vec3{0.14f, 0.45f, 0.091f}, Material::specular, Material::DIRECTIONAL};
+	Material m4 = {glm::vec3{37.0f, 32.0f, 24.0f}, glm::vec3{0.78f}, Material::diffuse, Material::UNIFORM}; //24.0f
 
-	Material m5 = {glm::vec3{0.0f}, glm::vec3{0.5f}, Material::diffuse};
-	Material m6 = {glm::vec3{30.0f}, glm::vec3{0.0f}, nullptr};
+	Material m5 = {glm::vec3{0.0f}, glm::vec3{0.5f}, Material::diffuse, Material::UNIFORM};
+	Material m6 = {glm::vec3{30.0f}, glm::vec3{0.0f}, nullptr, Material::UNIFORM};
 
 	Object::material_list.push_back(m1);
 	Object::material_list.push_back(m2);
