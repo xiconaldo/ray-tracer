@@ -62,17 +62,15 @@ void Scene::load( void ) {
 	loadObject("objects/cornell_box02.obj", 1);
 	loadObject("objects/cornell_box03.obj", 2);
 	loadObject("objects/cornell_box04.obj", 3);
-	//loadObject("objects/cornell_box_cube00.obj", 4);
-	//loadObject("objects/cornell_box_cube01.obj", 4);
+	// loadObject("objects/cornell_box_cube00.obj", 4, glm::vec3{-0.2f, 0.2f, -0.5f});
+	// loadObject("objects/cornell_box_cube01.obj", 4);
 
 	objects_.push_back(Object::ObjectUniquePtr(new Object));
-
-	objects_.back()->primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ -0.1f, 0.41f, -0.2f}, 0.4f } ) );
-
+	objects_.back()->primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ 0.5f, 0.31f, -0.2f}, 0.3f } ) );
 	objects_.back()->primitives_.back()->material_index = 4;
 }
 
-void Scene::loadObject(const std::string file_name, int material_index){
+void Scene::loadObject(const std::string file_name, int material_index, glm::vec3 translation){
 
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec3> normals;
@@ -97,9 +95,9 @@ void Scene::loadObject(const std::string file_name, int material_index){
 
 	for(int i = 0; i < face_count; i++){
 		objects_.back()->primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ 
-																	vertices[faces[i].vertices[0]-1],
-																	vertices[faces[i].vertices[1]-1],
-																	vertices[faces[i].vertices[2]-1]}));
+																	vertices[faces[i].vertices[0]-1] + translation,
+																	vertices[faces[i].vertices[1]-1] + translation,
+																	vertices[faces[i].vertices[2]-1] + translation}));
 
 		objects_.back()->primitives_.back()->material_index = material_index;
 	}

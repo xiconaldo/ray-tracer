@@ -204,6 +204,8 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 				fresnel = (cosThetaOut < 0.0f) ? 1.0f : (Ro + (1.0f - Ro) * pow(1.0f - cosThetaOut, 5.0f));
 			}
 
+			if(fresnel == 1.0f) std::cerr << ".";
+
 			//////////////
 			// REFLEXÃO //
 			//////////////
@@ -227,7 +229,7 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 			else{
 
 				glm::vec3 new_ray = (n_in / n_out) * 
-									(cosThetaIn * n - r.direction_) -
+									(cosThetaIn * n + r.direction_) -
 									n * 
 									(float)sqrt(cosThetaOut2);
 

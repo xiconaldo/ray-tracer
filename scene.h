@@ -26,7 +26,7 @@ public:
 
 	void load( void );
 
-	void loadObject(const std::string file_name, int material_index);
+	void loadObject(const std::string file_name, int material_index, glm::vec3 translation = glm::vec3{0.0f});
 
 	std::vector< Primitive::PrimitiveUniquePtr > primitives_;
 
