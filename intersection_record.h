@@ -8,10 +8,10 @@ class Primitive;
 
 struct IntersectionRecord
 {
-    float t_;
-    glm::vec3 position_;
-    glm::vec3 normal_;
-    const Primitive *object;
+	float t_;
+	glm::vec3 position_;
+	glm::vec3 normal_;
+	const Primitive *object;
 };
 
 #endif /* INTERSECTION_RECORD_H_ */

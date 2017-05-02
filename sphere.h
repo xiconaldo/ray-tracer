@@ -10,21 +10,21 @@ class Sphere : public Primitive
 {
 public:
 
-    Sphere( void );
+	Sphere( void );
 
-    Sphere( const glm::vec3 &center,
-            float radius );
+	Sphere( const glm::vec3 &center,
+			float radius );
 
-    bool intersect( const Ray &ray,
-                    IntersectionRecord &intersection_record ) const;
+	bool intersect( const Ray &ray,
+					IntersectionRecord &intersection_record ) const;
 
-    glm::vec3 center_ = { 0.0f, 0.0f, 0.0f };
+	glm::vec3 center_ = { 0.0f, 0.0f, 0.0f };
 
-    float radius_= 1.0f;
+	float radius_= 1.0f;
 
 private:
 
-    static const float kIntersectionTestEpsilon_;
+	static const float kIntersectionTestEpsilon_;
 };
 
 #endif /* SPHERE_H_ */

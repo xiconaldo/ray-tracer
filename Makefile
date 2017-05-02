@@ -18,8 +18,8 @@ CPPFLAGS += -MMD \
 LDFLAGS = -L/usr/lib/gcc/x86_64-linux-gnu/4.8 \
 		  -L/usr/lib/x86_64-linux-gnu \
 		  -L/usr/lib \
-	      -L/usr/local/lib \
-	      -L.
+		  -L/usr/local/lib \
+		  -L.
 
 LDLIBS = -lpthread
 

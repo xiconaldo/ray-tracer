@@ -92,18 +92,9 @@ void RayTracer::integrate_parallel( const int num_rays, const int thread_id )
 
 				buffer_.buffer_data_[x][y] /= float(num_rays);
 
-				buffer_.buffer_data_[x][y] = glm::clamp(buffer_.buffer_data_[x][y], glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{1.0f, 1.0f, 1.0f});
-
-				// if(thread_id == 0)
-				//  	buffer_.buffer_data_[x][y] = buffer_.buffer_data_[x][y] + glm::vec3{0.2f, -0.4f, -0.4f};
-				// else if(thread_id == 1)
-				//  	buffer_.buffer_data_[x][y] = buffer_.buffer_data_[x][y] + glm::vec3{-0.4f, 0.2f, -0.4f};
-				// else if(thread_id == 2)
-				// 	buffer_.buffer_data_[x][y] = buffer_.buffer_data_[x][y] + glm::vec3{-0.4f, -0.4f, 0.2f};
-				// else if(thread_id == 3)
-				// 	buffer_.buffer_data_[x][y] = buffer_.buffer_data_[x][y] + glm::vec3{0.2f, 0.2f, -0.4f};
-
-				// buffer_.buffer_data_[x][y] = glm::clamp(buffer_.buffer_data_[x][y], glm::vec3{0.0f, 0.0f, 0.0f}, glm::vec3{1.0f, 1.0f, 1.0f});
+				buffer_.buffer_data_[x][y] = glm::clamp(buffer_.buffer_data_[x][y], 
+														glm::vec3{0.0f, 0.0f, 0.0f}, 
+														glm::vec3{1.0f, 1.0f, 1.0f});
 
 				progress[thread_id]++;
 			}
@@ -120,17 +111,34 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 	glm::vec3 Lo = glm::vec3{0.0f};
 	IntersectionRecord intersection_record;
 	ONB rotation;
+	float n_in = 1.0f;
+	float n_out = 1.458f;
+	bool in_out;
 
-	if(depth < 10)
-		if ( scene_.intersect( r, intersection_record ) ){
+	if(depth < 10 && scene_.intersect( r, intersection_record ) ){
 
-			Material material = Object::material_list[intersection_record.object->material_index];
 
-			if(!material.brdf_pointer){
-				Lo = material.emittance_;
-			}
+		/////////////////////////////////////////////////
+		// DESCOBRIR SE O RAIO ESTÁ ENTRANDO OU SAINDO //
+		/////////////////////////////////////////////////
+		glm::vec3 n = intersection_record.normal_;
+		float cosThetaIn = -glm::dot(r.direction_, n);
+		in_out = (cosThetaIn < 0) ? OUT : IN;
+		cosThetaIn = (cosThetaIn < 0) ? -cosThetaIn : cosThetaIn;
+		/////////////////////////////////////////////////
 
-			else if(material.mode == Material::UNIFORM){
+		Material material = Object::material_list[intersection_record.object->material_index];
+
+		if(!material.brdf_pointer && !material.btdf_pointer){
+			Lo = material.emittance_;
+		}
+
+		/////////////////////////////////
+		// MATERIAL APENAS REFLETE LUZ //
+		/////////////////////////////////
+		else if( !material.btdf_pointer ){
+
+			if(material.mode == Material::UNIFORM){
 
 				float theta, phi, x, y, z;
 				
@@ -143,13 +151,13 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 
 				glm::vec3 new_ray = glm::vec3(x, y, z);
 
-				rotation.setFromV(intersection_record.normal_);
+				rotation.setFromV(n);
 				new_ray = rotation.getBasisMatrix() * new_ray;
 
-				float cosTheta = glm::dot(new_ray, intersection_record.normal_);
+				float cosTheta = glm::dot(new_ray, n);
 				
 
-				Ray reflect{ intersection_record.position_ + 0.001f * intersection_record.normal_, new_ray };
+				Ray reflect{ intersection_record.position_ + 0.001f * n, new_ray };
 
 				Lo = material.emittance_ +
 					 2.0f * float(M_PI) * 
@@ -160,20 +168,79 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 
 			else if(material.mode == Material::DIRECTIONAL){
 
-				rotation.setFromV(intersection_record.normal_);
-				glm::vec3 new_ray = glm::transpose(rotation.getBasisMatrix()) * r.direction_;
-				new_ray.y = -new_ray.y;
+				glm::vec3 new_ray = r.direction_ - 
+									2.0f * n * 
+									glm::dot(r.direction_, n);		
 
-				new_ray = rotation.getBasisMatrix() * new_ray;				
-
-				Ray reflect{ intersection_record.position_ + 0.001f * intersection_record.normal_, new_ray };
+				Ray reflect{ intersection_record.position_ + 0.001f * n, new_ray };
 
 				Lo = material.emittance_ +
-					 //2.0f * float(M_PI) * 
 					 material.brdf() * 
 					 L(reflect, ++depth, dist_theta, dist_phi, generator);
 			}
+
 		}
+
+
+		//////////////////////////////////////
+		// MATERIAL REFLETE E REFRATA A LUZ //
+		//////////////////////////////////////
+		else{
+
+			if(in_out == OUT){
+				std::swap(n_in, n_out);
+				n = -n;
+			}
+
+			float cosThetaOut2 = 1 - (float)pow( n_in / n_out , 2) * (1 - (float)pow(cosThetaIn, 2));
+			float Ro = pow( (n_in - n_out) / (n_in + n_out), 2.0f);
+			float fresnel;
+
+			if(n_in < n_out){
+				fresnel = Ro + (1.0f - Ro) * pow(1.0f - cosThetaIn, 5.0f);  // Fresnel correto
+			}
+			else{
+				float cosThetaOut = (cosThetaOut2 >= 0.0f) ? sqrt(cosThetaOut2) : -1.0f;
+				fresnel = (cosThetaOut < 0.0f) ? 1.0f : (Ro + (1.0f - Ro) * pow(1.0f - cosThetaOut, 5.0f));
+			}
+
+			//////////////
+			// REFLEXÃO //
+			//////////////
+			if( rand() / (float)RAND_MAX < fresnel){
+				
+				glm::vec3 new_ray = r.direction_ - 
+									2.0f * 
+									n * 
+									glm::dot(r.direction_, n);
+
+				Ray reflect{ intersection_record.position_ + 0.001f * n, new_ray };
+
+				Lo = material.emittance_ +
+					 material.brdf() * 
+					 L(reflect, ++depth, dist_theta, dist_phi, generator);
+			}
+
+			//////////////
+			// REFRAÇÃO //
+			//////////////
+			else{
+
+				glm::vec3 new_ray = (n_in / n_out) * 
+									(cosThetaIn * n - r.direction_) -
+									n * 
+									(float)sqrt(cosThetaOut2);
+
+				Ray reflect{ intersection_record.position_ - 0.001f * n, new_ray };
+
+				Lo = material.emittance_ +
+					 L(reflect, ++depth, dist_theta, dist_phi, generator);
+
+			}
+
+
+		}
+	}
 
 	return Lo;
 }

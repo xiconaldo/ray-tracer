@@ -17,20 +17,20 @@ class Scene
 {
 public:
 
-    Scene( void );
+	Scene( void );
 
-    ~Scene( void );
+	~Scene( void );
 
-    bool intersect( const Ray &ray,
-                    IntersectionRecord &intersection_record ) const;
+	bool intersect( const Ray &ray,
+					IntersectionRecord &intersection_record ) const;
 
-    void load( void );
+	void load( void );
 
-    void loadObject(const std::string file_name, int material_index);
+	void loadObject(const std::string file_name, int material_index);
 
-    std::vector< Primitive::PrimitiveUniquePtr > primitives_;
+	std::vector< Primitive::PrimitiveUniquePtr > primitives_;
 
-    std::vector< Object::ObjectUniquePtr > objects_;
+	std::vector< Object::ObjectUniquePtr > objects_;
 
 };
 

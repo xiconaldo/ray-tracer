@@ -8,29 +8,29 @@ class PerspectiveCamera : public Camera
 {
 public:
 
-    PerspectiveCamera( void );
+	PerspectiveCamera( void );
 
-    PerspectiveCamera( const float min_x,
-                        const float max_x,
-                        const float min_y,
-                        const float max_y,
-                        const glm::ivec2 &resolution,
-                        const glm::vec3 &position,
-                        const glm::vec3 &up_vector,
-                        const glm::vec3 &look_at,
-                        const float s = 1.0f);
+	PerspectiveCamera( const float min_x,
+						const float max_x,
+						const float min_y,
+						const float max_y,
+						const glm::ivec2 &resolution,
+						const glm::vec3 &position,
+						const glm::vec3 &up_vector,
+						const glm::vec3 &look_at,
+						const float s = 1.0f);
 
-    Ray getWorldSpaceRay( const glm::vec2 &pixel_coord ) const;
+	Ray getWorldSpaceRay( const glm::vec2 &pixel_coord ) const;
 
-    float min_x_;
+	float min_x_;
 
-    float max_x_;
+	float max_x_;
 
-    float min_y_;
+	float min_y_;
 
-    float max_y_;
+	float max_y_;
 
-    float s_;
+	float s_;
 
 };
 

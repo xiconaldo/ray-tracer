@@ -54,8 +54,8 @@ bool Triangle::intersect( const Ray &ray,
 	intersection_record.position_ = ray.origin_ + t*ray.direction_;
 	intersection_record.normal_ = glm::normalize(glm::cross(v_b_ - v_a_, v_c_ - v_a_));
 
-	if(glm::dot(intersection_record.normal_, ray.direction_) > 0.0f)
-		intersection_record.normal_ = -intersection_record.normal_;
+	//if(glm::dot(intersection_record.normal_, ray.direction_) > 0.0f)
+	//	intersection_record.normal_ = -intersection_record.normal_;
 
 	intersection_record.object = this;
 	return true;

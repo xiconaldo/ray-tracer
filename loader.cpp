@@ -26,7 +26,7 @@ Indexed_Face::~Indexed_Face(){
  * Conta o número de ocorrências de determinado símbolo em uma string.
  * @param  word   string da qual deseja-se contar os símbolos.
  * @param  symbol símbolo que será buscado na string.
- * @return        número de ocorrências do símbolo.
+ * @return		número de ocorrências do símbolo.
  */
 int count_symbol(const std::string& word, char symbol){
 	int pos = -1;
@@ -44,34 +44,34 @@ int count_symbol(const std::string& word, char symbol){
 /**
  * Lê um arquivo .obj, extrai as informações de vértices, normais e
  * texturas contidas nele e as escreve em arrays, separadamente.
- * @param obj_name       nome do arquivo .obj de onde deseja-se ler 
- *                       as informações.
- * @param vertices       ponteiro para um array de Vertex que contem
- *                       todos os vértices lidos do arquivo .obj.
- * @param normals        ponteiro para um array de Vertex que contem 
- *                       todos os vetores normais lidos do .obj.
- * @param uvs            ponteiro para um array de Vertex que contem
- *                       todas as coordenadas de textura lidas do .obj.
+ * @param obj_name	   nome do arquivo .obj de onde deseja-se ler 
+ *					   as informações.
+ * @param vertices	   ponteiro para um array de Vertex que contem
+ *					   todos os vértices lidos do arquivo .obj.
+ * @param normals		ponteiro para um array de Vertex que contem 
+ *					   todos os vetores normais lidos do .obj.
+ * @param uvs			ponteiro para um array de Vertex que contem
+ *					   todas as coordenadas de textura lidas do .obj.
  * @param vertex_indices ponteiro para um array de int que contem 
- *                       todos os índices que referenciam os elementos 
- *                       no array de vértices, lidos do .obj.
+ *					   todos os índices que referenciam os elementos 
+ *					   no array de vértices, lidos do .obj.
  * @param normal_indices ponteiro para um array de int que contem 
- *                       todos os índices que referenciam os elementos 
- *                       no array de vetores normais, lidos do .obj.
- * @param uv_indices     ponteiro para um array de int que contem 
- *                       todos os índices que referenciam os elementos 
- *                       no array de coordenadas de textura, lidos 
- *                       do arquivo .obj.
+ *					   todos os índices que referenciam os elementos 
+ *					   no array de vetores normais, lidos do .obj.
+ * @param uv_indices	 ponteiro para um array de int que contem 
+ *					   todos os índices que referenciam os elementos 
+ *					   no array de coordenadas de textura, lidos 
+ *					   do arquivo .obj.
  * @param vertex_count   referência para um inteiro que contem
- *                       o número de vértices lidos do arquivo.
+ *					   o número de vértices lidos do arquivo.
  * @param normal_count   referência para um inteiro que contem
- *                       o número de normais lidas do arquivo.
- * @param uv_count       referência para um inteiro que contem
- *                       o número de coordenadas de textura lidas 
- *                       do arquivo.
+ *					   o número de normais lidas do arquivo.
+ * @param uv_count	   referência para um inteiro que contem
+ *					   o número de coordenadas de textura lidas 
+ *					   do arquivo.
  * @param face_count referência para um inteiro que contem
- *                       o número de triângulos formados pelos 
- *                       vértices lidos do arquivo.
+ *					   o número de triângulos formados pelos 
+ *					   vértices lidos do arquivo.
  */
 void load_data(	const std::string& obj_name,
 				std::vector<glm::vec3> &vertices,
@@ -195,21 +195,21 @@ void load_data(	const std::string& obj_name,
 /**
  * Agrupa os vértices, normais e coordenadas de textura em um único array de acordo
  * com a combinação apresentada pelos índices fornecidos.
- * @param vertices       array que contem uma lista de vértices.
- * @param normals        array que contem uma lista de vetores normais.
- * @param uvs            array que contem uma lista de coordenadas de textura.
+ * @param vertices	   array que contem uma lista de vértices.
+ * @param normals		array que contem uma lista de vetores normais.
+ * @param uvs			array que contem uma lista de coordenadas de textura.
  * @param vertex_indices array de índices inteiros que mapeaiam os
- *                       elementos que se encontram em vertices.
+ *					   elementos que se encontram em vertices.
  * @param normal_indices array de índices inteiros que mapeaiam os
- *                       elementos que se encontram em normals.
- * @param uv_indices     array de índices inteiros que mapeaiam os
- *                       elementos que se encontram em uvs.
+ *					   elementos que se encontram em normals.
+ * @param uv_indices	 array de índices inteiros que mapeaiam os
+ *					   elementos que se encontram em uvs.
  * @param face_count número de triângulos formados pelos vértices.
- * @param data           ponteiro para um array de Vertex254s, que contêm 
- *                       todos os vértices, normais e coordenadas de 
- *                       textura lidas dos três primeiros parâmetros, 
- *                       agrupados de acordo com a combinação de índices 
- *                       passados nos três últimos parâmetros.
+ * @param data		   ponteiro para um array de Vertex254s, que contêm 
+ *					   todos os vértices, normais e coordenadas de 
+ *					   textura lidas dos três primeiros parâmetros, 
+ *					   agrupados de acordo com a combinação de índices 
+ *					   passados nos três últimos parâmetros.
  */
 void group_data(const std::vector<glm::vec3> &vertices,
 				const std::vector<glm::vec3> &normals,
@@ -280,12 +280,12 @@ void group_data(const std::vector<glm::vec3> &vertices,
  * Extrai a informação sobre vértices, normais e coordenadas de textura 
  * de um arquivo .obj e escreve os dados obtidos de forma agrupada, em 
  * um único array.
- * @param obj_name       nome do arquivo .obj do qual deseja-se extrair 
- *                       os dados.
+ * @param obj_name	   nome do arquivo .obj do qual deseja-se extrair 
+ *					   os dados.
  * @param face_count quantidade de triângulos lidos no arquivo.
- * @param data           array de estruturas Vertex254, que contêm todos os
- *                       vértices, normais e coordenadas de texturas 
- *                       lidos do arquivo.
+ * @param data		   array de estruturas Vertex254, que contêm todos os
+ *					   vértices, normais e coordenadas de texturas 
+ *					   lidos do arquivo.
  */
 void load_grouped_data(	const std::string& obj_name,
 						int& face_count,
@@ -317,7 +317,7 @@ void load_grouped_data(	const std::string& obj_name,
  * de uma string. Neste contexto, é usada para ler arquivos que contêm
  * código-fonte de shaders, no formato .glsl.
  * @param  file_name nome do arquivo a ser lido.
- * @return           string com o conteúdo do arquivo.
+ * @return		   string com o conteúdo do arquivo.
  */
 std::string load_shader(const std::string& file_name){
 	std::fstream file(file_name, std::ios_base::in);

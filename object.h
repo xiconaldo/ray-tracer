@@ -11,9 +11,9 @@ public:
 
 	typedef std::unique_ptr< Object > ObjectUniquePtr;
 
-    std::vector< Primitive::PrimitiveUniquePtr > primitives_;
+	std::vector< Primitive::PrimitiveUniquePtr > primitives_;
 
-    static std::vector< Material > material_list;
+	static std::vector< Material > material_list;
 
 };
 

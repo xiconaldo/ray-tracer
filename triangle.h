@@ -10,18 +10,18 @@ class Triangle : public Primitive
 {
 public:
 
-    Triangle( void );
+	Triangle( void );
 
-    Triangle( const glm::vec3 &v_a,
-    		const glm::vec3 &v_b,
-    		const glm::vec3 &v_c );
+	Triangle( const glm::vec3 &v_a,
+			const glm::vec3 &v_b,
+			const glm::vec3 &v_c );
 
-    bool intersect( const Ray &ray,
-                    IntersectionRecord &intersection_record ) const;
+	bool intersect( const Ray &ray,
+					IntersectionRecord &intersection_record ) const;
 
-    glm::vec3 v_a_;
-    glm::vec3 v_b_;
-    glm::vec3 v_c_;
+	glm::vec3 v_a_;
+	glm::vec3 v_b_;
+	glm::vec3 v_c_;
 };
 
 #endif /* TRIANGLE_H_ */

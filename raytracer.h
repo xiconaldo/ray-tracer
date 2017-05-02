@@ -18,6 +18,8 @@ class RayTracer
 {
 public:
 
+	enum {IN = false, OUT = true};
+
 	RayTracer( Camera &camera,
 			   const Scene &scene,
 			   const glm::vec3 background_color,
