@@ -12,8 +12,8 @@ struct Material
 	glm::vec3 reflectance_;
 	glm::vec3 (*brdf_pointer)( const glm::vec3& reflectance );
 	glm::vec3 (*btdf_pointer)( const glm::vec3& reflectance );
-
 	SamplerMode mode;
+	
 	glm::vec3 brdf( void );
 	glm::vec3 btdf( void );
 

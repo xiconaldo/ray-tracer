@@ -48,8 +48,9 @@ void Scene::load( void ) {
 	Material m2 = {glm::vec3{0.0f}, glm::vec3{0.63f, 0.065f, 0.05f}, Material::diffuse, nullptr, Material::UNIFORM};
 	Material m3 = {glm::vec3{0.0f}, glm::vec3{0.14f, 0.45f, 0.091f}, Material::diffuse, nullptr, Material::UNIFORM};
 	Material m4 = {glm::vec3{37.0f, 32.0f, 24.0f}, glm::vec3{0.78f}, Material::diffuse, nullptr, Material::UNIFORM}; //24.0f
-	Material m5 = {glm::vec3{0.0f}, glm::vec3{1.0f}, Material::specular, Material::specular, Material::DIRECTIONAL};
+	Material m5 = {glm::vec3{0.0f}, glm::vec3{0.1f, 0.9f, 0.9f}, Material::specular, Material::specular, Material::DIRECTIONAL};
 	Material m6 = {glm::vec3{0.0f}, glm::vec3{0.06f, 0.065f, 0.84f}, Material::diffuse, nullptr, Material::UNIFORM};
+	Material m7 = {glm::vec3{0.0f}, glm::vec3{0.1f, 0.9f, 0.9f}, Material::specular, nullptr, Material::DIRECTIONAL};
 
 	Object::material_list.push_back(m1);
 	Object::material_list.push_back(m2);
@@ -57,17 +58,23 @@ void Scene::load( void ) {
 	Object::material_list.push_back(m4);
 	Object::material_list.push_back(m5);
 	Object::material_list.push_back(m6);
+	Object::material_list.push_back(m7);
 
 	loadObject("objects/cornell_box05.obj", 0);
 	loadObject("objects/cornell_box02.obj", 1);
 	loadObject("objects/cornell_box03.obj", 2);
 	loadObject("objects/cornell_box04.obj", 3);
 	// loadObject("objects/cornell_box_cube00.obj", 4, glm::vec3{-0.2f, 0.2f, -0.5f});
+	loadObject("objects/cornell_box_cube00.obj", 4, glm::vec3{0.1f, 0.0f, -0.3f});
 	// loadObject("objects/cornell_box_cube01.obj", 4);
 
+	// objects_.push_back(Object::ObjectUniquePtr(new Object));
+	// objects_.back()->primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ 0.5f, 0.31f, 0.1f}, 0.3f } ) );
+	// objects_.back()->primitives_.back()->material_index = 4;
+
 	objects_.push_back(Object::ObjectUniquePtr(new Object));
-	objects_.back()->primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ 0.5f, 0.31f, -0.2f}, 0.3f } ) );
-	objects_.back()->primitives_.back()->material_index = 4;
+	objects_.back()->primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ -0.3f, 0.31f, -0.3f}, 0.3f } ) );
+	objects_.back()->primitives_.back()->material_index = 6;
 }
 
 void Scene::loadObject(const std::string file_name, int material_index, glm::vec3 translation){

@@ -111,6 +111,13 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 	glm::vec3 Lo = glm::vec3{0.0f};
 	IntersectionRecord intersection_record;
 	ONB rotation;
+
+	float fresnel;
+	float cosThetaIn;
+	float cosThetaOut;
+	float cosThetaOut2 = 0.0f;
+	glm::vec3 new_ray;
+
 	float n_in = 1.0f;
 	float n_out = 1.458f;
 	bool in_out;
@@ -118,27 +125,54 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 	if(depth < 10 && scene_.intersect( r, intersection_record ) ){
 
 
-		/////////////////////////////////////////////////
-		// DESCOBRIR SE O RAIO ESTÁ ENTRANDO OU SAINDO //
-		/////////////////////////////////////////////////
+		////////////////////////////////////
+		// ENCONTRAR INFORMAÇÕES INICIAIS //
+		////////////////////////////////////
 		glm::vec3 n = intersection_record.normal_;
-		float cosThetaIn = -glm::dot(r.direction_, n);
-		in_out = (cosThetaIn < 0) ? OUT : IN;
-		cosThetaIn = (cosThetaIn < 0) ? -cosThetaIn : cosThetaIn;
+		cosThetaIn = glm::dot(r.direction_, n);
+		in_out = (cosThetaIn > 0) ? OUT : IN;
+		cosThetaIn = glm::abs(cosThetaIn);
 		/////////////////////////////////////////////////
 
 		Material material = Object::material_list[intersection_record.object->material_index];
 
 		if(!material.brdf_pointer && !material.btdf_pointer){
 			Lo = material.emittance_;
+			return Lo;
+		}
+		
+
+		/////////////////////
+		// DEFINIR FRESNEL //
+		/////////////////////
+		if( !material.btdf_pointer ){
+			fresnel = 1.0f;
+		}
+		else{
+
+			if(in_out == OUT){
+				std::swap(n_in, n_out);
+				n = -n;
+			}
+
+			cosThetaOut2 = 1 - (float)pow( n_in / n_out , 2) * (1 - (float)pow(cosThetaIn, 2));
+			float Ro = pow( (n_in - n_out) / (n_in + n_out), 2.0f);
+
+			if(n_in < n_out){
+				fresnel = Ro + (1.0f - Ro) * pow(1.0f - cosThetaIn, 5.0f);  // Fresnel correto
+			}
+			else{
+				cosThetaOut = (cosThetaOut2 >= 0.0f) ? sqrt(cosThetaOut2) : -1.0f;
+				fresnel = (cosThetaOut < 0.0f) ? 2.0f : (Ro + (1.0f - Ro) * pow(1.0f - cosThetaOut, 5.0f));
+			}
 		}
 
-		/////////////////////////////////
-		// MATERIAL APENAS REFLETE LUZ //
-		/////////////////////////////////
-		else if( !material.btdf_pointer ){
-
-			if(material.mode == Material::UNIFORM){
+		//////////////
+		// REFLEXÃO //
+		//////////////
+		if( rand() / (float)RAND_MAX < fresnel){
+				
+			if(material.mode == Material::UNIFORM && fresnel < 2.0f){
 
 				float theta, phi, x, y, z;
 				
@@ -148,29 +182,28 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 				x = sin(phi) * cos(theta);
 				z = sin(phi) * sin(theta);
 				y = cos(phi);
-
-				glm::vec3 new_ray = glm::vec3(x, y, z);
+				
+				new_ray = glm::vec3(x, y, z);
 
 				rotation.setFromV(n);
 				new_ray = rotation.getBasisMatrix() * new_ray;
 
-				float cosTheta = glm::dot(new_ray, n);
-				
+				cosThetaOut = glm::dot(new_ray, n);
 
 				Ray reflect{ intersection_record.position_ + 0.001f * n, new_ray };
-
+				
 				Lo = material.emittance_ +
 					 2.0f * float(M_PI) * 
 					 material.brdf() * 
 					 L(reflect, ++depth, dist_theta, dist_phi, generator) * 
-					 cosTheta;
+					 cosThetaOut;
 			}
 
-			else if(material.mode == Material::DIRECTIONAL){
+			else if(material.mode == Material::DIRECTIONAL || fresnel == 2.0f){
 
-				glm::vec3 new_ray = r.direction_ - 
-									2.0f * n * 
-									glm::dot(r.direction_, n);		
+				new_ray = r.direction_ - 
+						  2.0f * n * 
+						  glm::dot(r.direction_, n);	
 
 				Ray reflect{ intersection_record.position_ + 0.001f * n, new_ray };
 
@@ -181,65 +214,22 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 
 		}
 
-
-		//////////////////////////////////////
-		// MATERIAL REFLETE E REFRATA A LUZ //
-		//////////////////////////////////////
+		//////////////
+		// REFRAÇÃO //
+		//////////////
 		else{
 
-			if(in_out == OUT){
-				std::swap(n_in, n_out);
-				n = -n;
-			}
+			new_ray = (n_in / n_out) * 
+					  (cosThetaIn * n + r.direction_) -
+					  n * 
+					  (float)sqrt(cosThetaOut2);
 
-			float cosThetaOut2 = 1 - (float)pow( n_in / n_out , 2) * (1 - (float)pow(cosThetaIn, 2));
-			float Ro = pow( (n_in - n_out) / (n_in + n_out), 2.0f);
-			float fresnel;
+			new_ray = glm::normalize(new_ray);
 
-			if(n_in < n_out){
-				fresnel = Ro + (1.0f - Ro) * pow(1.0f - cosThetaIn, 5.0f);  // Fresnel correto
-			}
-			else{
-				float cosThetaOut = (cosThetaOut2 >= 0.0f) ? sqrt(cosThetaOut2) : -1.0f;
-				fresnel = (cosThetaOut < 0.0f) ? 1.0f : (Ro + (1.0f - Ro) * pow(1.0f - cosThetaOut, 5.0f));
-			}
+			Ray reflect{ intersection_record.position_ - 0.001f * n, new_ray };
 
-			if(fresnel == 1.0f) std::cerr << ".";
-
-			//////////////
-			// REFLEXÃO //
-			//////////////
-			if( rand() / (float)RAND_MAX < fresnel){
-				
-				glm::vec3 new_ray = r.direction_ - 
-									2.0f * 
-									n * 
-									glm::dot(r.direction_, n);
-
-				Ray reflect{ intersection_record.position_ + 0.001f * n, new_ray };
-
-				Lo = material.emittance_ +
-					 material.brdf() * 
-					 L(reflect, ++depth, dist_theta, dist_phi, generator);
-			}
-
-			//////////////
-			// REFRAÇÃO //
-			//////////////
-			else{
-
-				glm::vec3 new_ray = (n_in / n_out) * 
-									(cosThetaIn * n + r.direction_) -
-									n * 
-									(float)sqrt(cosThetaOut2);
-
-				Ray reflect{ intersection_record.position_ - 0.001f * n, new_ray };
-
-				Lo = material.emittance_ +
-					 L(reflect, ++depth, dist_theta, dist_phi, generator);
-
-			}
-
+			Lo = material.emittance_ +
+				 L(reflect, ++depth, dist_theta, dist_phi, generator);
 
 		}
 	}
