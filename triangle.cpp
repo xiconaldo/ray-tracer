@@ -9,7 +9,12 @@ Triangle::Triangle( const glm::vec3 &v_a,
 		v_a_{ v_a },
 		v_b_{ v_b },
 		v_c_{ v_c }
-{}
+{
+	positive_corner = max_components(v_a, max_components(v_b, v_c));
+	negative_corner = min_components(v_a, min_components(v_b, v_c));
+	//center_ = (v_a + v_b + v_c) / 3.0f;
+	center_ = (positive_corner + negative_corner) * 0.5f;
+}
 
 bool Triangle::intersect( const Ray &ray,
 						IntersectionRecord &intersection_record ) const
@@ -61,3 +66,28 @@ bool Triangle::intersect( const Ray &ray,
 	return true;
 }
 
+glm::vec3 Triangle::max_components(const glm::vec3 &vecA, const glm::vec3 &vecB){
+
+	glm::vec3 max;
+
+	for(int i = 0; i < 3; i++)
+		if(vecA[i] > vecB[i])
+			max[i] = vecA[i];
+		else
+			max[i] = vecB[i];
+
+	return max;
+}
+
+glm::vec3 Triangle::min_components(const glm::vec3 &vecA, const glm::vec3 &vecB){
+
+	glm::vec3 min;
+
+	for(int i = 0; i < 3; i++)
+		if(vecA[i] < vecB[i])
+			min[i] = vecA[i];
+		else
+			min[i] = vecB[i];
+
+	return min;
+}

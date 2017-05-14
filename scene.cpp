@@ -6,40 +6,55 @@ Scene::Scene( void )
 Scene::~Scene( void )
 {}
 
+struct CheckIntersection{
+
+	CheckIntersection(const Ray &ray,
+				   	  IntersectionRecord &intersection_record) :
+	ray(ray)
+	{
+
+		this->intersection_record = intersection_record;
+		this->intersection_record.t_ = std::numeric_limits< double >::max();
+	}
+
+	bool intersection_result = false;
+	IntersectionRecord tmp_intersection_record;
+	IntersectionRecord intersection_record;
+	const Ray ray;
+	
+
+	void operator()(BBox *node){
+
+		if(node->intersect(ray)){
+
+			if(node->primitives_index == nullptr){
+				this->operator()(node->left);
+				this->operator()(node->right);
+				return;
+			}
+			
+
+			for ( int primitive_id : *(node->primitives_index) )
+				if ( Object::primitives_[primitive_id]->intersect( ray, tmp_intersection_record ) )
+					if ( ( tmp_intersection_record.t_ < intersection_record.t_ ) && ( tmp_intersection_record.t_ > 0.0 ) )
+					{
+						intersection_record = tmp_intersection_record;
+						intersection_result = true; // the ray intersects a primitive!
+					}
+		}
+
+	}
+};
+
 bool Scene::intersect( const Ray &ray,
 					   IntersectionRecord &intersection_record ) const
 {
-	bool intersection_result = false;
-	IntersectionRecord tmp_intersection_record;
-	intersection_record.t_ = std::numeric_limits< double >::max();
-	//std::size_t num_primitives = primitives_.size();
-	std::size_t num_objects = objects_.size();
-	std::size_t num_primitives;
 
-	// Loops over the list of primitives, testing the intersection of each primitive against the given ray 
-	// for ( std::size_t primitive_id = 0; primitive_id < num_primitives; primitive_id++ )
-	// 	if ( primitives_[primitive_id]->intersect( ray, tmp_intersection_record ) )
-	// 		if ( ( tmp_intersection_record.t_ < intersection_record.t_ ) && ( tmp_intersection_record.t_ > 0.0 ) )
-	// 		{
-	// 			intersection_record = tmp_intersection_record;
-	// 			intersection_result = true; // the ray intersects a primitive!
-	// 		}
+	CheckIntersection check_intersection{ ray, intersection_record };
+	check_intersection(bvh.root);
+	intersection_record = check_intersection.intersection_record;
 
-	// Loops over the list of primitives, testing the intersection of each primitive against the given ray 
-	for ( std::size_t object_id = 0; object_id < num_objects; object_id++ ){
-		
-		num_primitives = objects_[object_id]->primitives_.size();
-
-		for ( std::size_t primitive_id = 0; primitive_id < num_primitives; primitive_id++ )
-			if ( objects_[object_id]->primitives_[primitive_id]->intersect( ray, tmp_intersection_record ) )
-				if ( ( tmp_intersection_record.t_ < intersection_record.t_ ) && ( tmp_intersection_record.t_ > 0.0 ) )
-				{
-					intersection_record = tmp_intersection_record;
-					intersection_result = true; // the ray intersects a primitive!
-				}
-	}
-
-	return intersection_result;
+	return check_intersection.intersection_result;
 }
 
 void Scene::load( void ) {
@@ -60,21 +75,33 @@ void Scene::load( void ) {
 	Object::material_list.push_back(m6);
 	Object::material_list.push_back(m7);
 
-	loadObject("objects/cornell_box05.obj", 0);
-	loadObject("objects/cornell_box02.obj", 1);
-	loadObject("objects/cornell_box03.obj", 2);
-	loadObject("objects/cornell_box04.obj", 3);
+	// loadObject("objects/cornell_box05.obj", 0);
+	// loadObject("objects/cornell_box02.obj", 1);
+	// loadObject("objects/cornell_box03.obj", 2);
+	// loadObject("objects/cornell_box04.obj", 3);
 	// loadObject("objects/cornell_box_cube00.obj", 4, glm::vec3{-0.2f, 0.2f, -0.5f});
-	loadObject("objects/cornell_box_cube00.obj", 4, glm::vec3{0.1f, 0.0f, -0.3f});
+	// loadObject("objects/cornell_box_cube00.obj", 4, glm::vec3{0.1f, 0.0f, -0.3f});
 	// loadObject("objects/cornell_box_cube01.obj", 4);
+	
+	loadObject("objects/monkey90.obj", 0);
+	loadObject("objects/light.obj", 3);
 
 	// objects_.push_back(Object::ObjectUniquePtr(new Object));
-	// objects_.back()->primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ 0.5f, 0.31f, 0.1f}, 0.3f } ) );
-	// objects_.back()->primitives_.back()->material_index = 4;
+	// Object::primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ 0.5f, 0.31f, 0.1f}, 0.3f } ) );
+	// Object::primitives_.back()->material_index = 4;
+	// //objects_.back()->primitives_index_.push_back(Object::primitives_.size() - 1);
 
-	objects_.push_back(Object::ObjectUniquePtr(new Object));
-	objects_.back()->primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ -0.3f, 0.31f, -0.3f}, 0.3f } ) );
-	objects_.back()->primitives_.back()->material_index = 6;
+	// objects_.push_back(Object::ObjectUniquePtr(new Object));
+	// Object::primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ -0.3f, 0.31f, -0.3f}, 0.3f } ) );
+	// Object::primitives_.back()->material_index = 6;
+	//objects_.back()->primitives_index_.push_back(Object::primitives_.size() - 1);
+
+	std::vector< int > primitives_index(Object::primitives_.size()) ;
+	for(unsigned int i = 0; i < primitives_index.size(); i++)
+		primitives_index[i] = i;
+
+	bvh.construct(primitives_index);
+	//bvh.print(bvh.root);
 }
 
 void Scene::loadObject(const std::string file_name, int material_index, glm::vec3 translation){
@@ -101,13 +128,14 @@ void Scene::loadObject(const std::string file_name, int material_index, glm::vec
 				face_count); 
 
 	for(int i = 0; i < face_count; i++){
-		objects_.back()->primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ 
+		Object::primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ 
 																	vertices[faces[i].vertices[0]-1] + translation,
 																	vertices[faces[i].vertices[1]-1] + translation,
 																	vertices[faces[i].vertices[2]-1] + translation}));
 
-		objects_.back()->primitives_.back()->material_index = material_index;
+		Object::primitives_.back()->material_index = material_index;
 	}
 
+	//objects_.back()->primitives_index_.push_back(Object::primitives_.size() - 1);
 }
 

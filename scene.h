@@ -12,6 +12,7 @@
 #include "triangle.h"
 #include "loader.h"
 #include "object.h"
+#include "bvh.h"
 
 class Scene
 {
@@ -31,6 +32,8 @@ public:
 	std::vector< Primitive::PrimitiveUniquePtr > primitives_;
 
 	std::vector< Object::ObjectUniquePtr > objects_;
+
+	BVH bvh;
 
 };
 

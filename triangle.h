@@ -22,6 +22,10 @@ public:
 	glm::vec3 v_a_;
 	glm::vec3 v_b_;
 	glm::vec3 v_c_;
+
+private:
+	glm::vec3 max_components(const glm::vec3 &vecA, const glm::vec3 &vecB);
+	glm::vec3 min_components(const glm::vec3 &vecA, const glm::vec3 &vecB);
 };
 
 #endif /* TRIANGLE_H_ */

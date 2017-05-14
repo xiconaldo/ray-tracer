@@ -7,7 +7,10 @@ Sphere::Sphere( const glm::vec3 &center,
 				float radius ) :
 		center_{ center },
 		radius_{ radius }
-{}
+{
+	positive_corner = center + glm::vec3{radius};
+	negative_corner = center - glm::vec3{radius};
+}
 
 bool Sphere::intersect( const Ray &ray,
 						IntersectionRecord &intersection_record ) const
