@@ -21,9 +21,11 @@ struct CheckIntersection{
 	IntersectionRecord tmp_intersection_record;
 	IntersectionRecord intersection_record;
 	const Ray ray;
-	
+
 
 	void operator()(BBox *node){
+
+		if(node == nullptr) return;
 
 		if(node->intersect(ray)){
 
@@ -32,7 +34,7 @@ struct CheckIntersection{
 				this->operator()(node->right);
 				return;
 			}
-			
+
 
 			for ( int primitive_id : *(node->primitives_index) )
 				if ( Object::primitives_[primitive_id]->intersect( ray, tmp_intersection_record ) )
@@ -75,33 +77,30 @@ void Scene::load( void ) {
 	Object::material_list.push_back(m6);
 	Object::material_list.push_back(m7);
 
-	// loadObject("objects/cornell_box05.obj", 0);
-	// loadObject("objects/cornell_box02.obj", 1);
-	// loadObject("objects/cornell_box03.obj", 2);
-	// loadObject("objects/cornell_box04.obj", 3);
-	// loadObject("objects/cornell_box_cube00.obj", 4, glm::vec3{-0.2f, 0.2f, -0.5f});
+	loadObject("objects/cornell_box05.obj", 0);
+	loadObject("objects/cornell_box02.obj", 1);
+	loadObject("objects/cornell_box03.obj", 2);
+	loadObject("objects/cornell_box04.obj", 3);
+	//loadObject("objects/cornell_box_cube00.obj", 4, glm::vec3{-0.2f, 0.2f, -0.5f});
 	// loadObject("objects/cornell_box_cube00.obj", 4, glm::vec3{0.1f, 0.0f, -0.3f});
-	// loadObject("objects/cornell_box_cube01.obj", 4);
-	
-	loadObject("objects/monkey90.obj", 0);
-	loadObject("objects/light.obj", 3);
+	//loadObject("objects/cornell_box_cube01.obj", 4);
 
-	// objects_.push_back(Object::ObjectUniquePtr(new Object));
-	// Object::primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ 0.5f, 0.31f, 0.1f}, 0.3f } ) );
-	// Object::primitives_.back()->material_index = 4;
-	// //objects_.back()->primitives_index_.push_back(Object::primitives_.size() - 1);
+	// loadObject("objects/monkey90.obj", 0);
+	// loadObject("objects/light.obj", 3);
 
-	// objects_.push_back(Object::ObjectUniquePtr(new Object));
-	// Object::primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ -0.3f, 0.31f, -0.3f}, 0.3f } ) );
-	// Object::primitives_.back()->material_index = 6;
-	//objects_.back()->primitives_index_.push_back(Object::primitives_.size() - 1);
+	objects_.push_back(Object::ObjectUniquePtr(new Object));
+	Object::primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ 0.5f, 0.31f, 0.1f}, 0.3f } ) );
+	Object::primitives_.back()->material_index = 4;
+
+	objects_.push_back(Object::ObjectUniquePtr(new Object));
+	Object::primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ -0.3f, 0.31f, -0.3f}, 0.3f } ) );
+	Object::primitives_.back()->material_index = 6;
 
 	std::vector< int > primitives_index(Object::primitives_.size()) ;
 	for(unsigned int i = 0; i < primitives_index.size(); i++)
 		primitives_index[i] = i;
 
 	bvh.construct(primitives_index);
-	//bvh.print(bvh.root);
 }
 
 void Scene::loadObject(const std::string file_name, int material_index, glm::vec3 translation){
@@ -111,24 +110,24 @@ void Scene::loadObject(const std::string file_name, int material_index, glm::vec
 	std::vector<glm::vec2> uvs;
 	std::vector<Indexed_Face> faces;
 	int vertex_count;
-	int normal_count; 
+	int normal_count;
 	int uv_count;
 	int face_count;
-	
+
 	objects_.push_back(Object::ObjectUniquePtr(new Object));
 
 	load_data(	file_name,
-				vertices, 
-				normals, 
-				uvs, 
-				faces, 
-				vertex_count, 
-				normal_count, 
-				uv_count, 
-				face_count); 
+				vertices,
+				normals,
+				uvs,
+				faces,
+				vertex_count,
+				normal_count,
+				uv_count,
+				face_count);
 
 	for(int i = 0; i < face_count; i++){
-		Object::primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{ 
+		Object::primitives_.push_back( Primitive::PrimitiveUniquePtr( new Triangle{
 																	vertices[faces[i].vertices[0]-1] + translation,
 																	vertices[faces[i].vertices[1]-1] + translation,
 																	vertices[faces[i].vertices[2]-1] + translation}));
@@ -136,6 +135,4 @@ void Scene::loadObject(const std::string file_name, int material_index, glm::vec
 		Object::primitives_.back()->material_index = material_index;
 	}
 
-	//objects_.back()->primitives_index_.push_back(Object::primitives_.size() - 1);
 }
-
