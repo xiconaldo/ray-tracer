@@ -18,6 +18,7 @@ struct BBox{
 	glm::vec3 center;
 
 	bool intersect( const Ray &ray );
+	int size();
 
 };
 
@@ -26,9 +27,9 @@ class BVH{
 public:
 	BVH();
 
-	void construct(std::vector< int >& primitives_index);
+	void construct(std::vector< int > &primitives_index);
 
-	void constructNode(BBox *node, std::vector< int > primitives_index);
+	void constructNode(BBox *node, const std::vector< int > &primitives_index);
 
 	void print(BBox *node);
 
