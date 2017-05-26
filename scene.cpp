@@ -83,10 +83,7 @@ void Scene::load( void ) {
 	// loadObject("objects/cornell_box04.obj", 3);
 	//loadObject("objects/cornell_box_cube00.obj", 4, glm::vec3{-0.2f, 0.2f, -0.5f});
 	// loadObject("objects/cornell_box_cube00.obj", 4, glm::vec3{0.1f, 0.0f, -0.3f});
-	//loadObject("objects/cornell_box_cube01.obj", 4);
-
-	loadObject("objects/monkey90.obj", 0);
-	loadObject("objects/light.obj", 3);
+	// loadObject("objects/cornell_box_cube01.obj", 4);
 
 	// objects_.push_back(Object::ObjectUniquePtr(new Object));
 	// Object::primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ 0.5f, 0.31f, 0.1f}, 0.3f } ) );
@@ -96,12 +93,32 @@ void Scene::load( void ) {
 	// Object::primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ -0.3f, 0.31f, -0.3f}, 0.3f } ) );
 	// Object::primitives_.back()->material_index = 6;
 
+	//loadObject("objects/monkey90.obj", 4);
+	// loadObject("objects/monkey_cornell.obj", 4);
+	//loadObject("objects/light.obj", 3);
+
+	// loadObject("objects/tree.obj", 0);
+	//loadObject("objects/ground.obj", 0);
+	// //loadObject("objects/light_tree2.obj", 3);
+	//
+	// objects_.push_back(Object::ObjectUniquePtr(new Object));
+	// Object::primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ -1.0f, 10.0f, 2.0f}, 1.2f } ) );
+	// Object::primitives_.back()->material_index = 3;
+
+	loadObject("objects/buda.obj", 0);
+	loadObject("objects/buda_ground.obj", 0);
+
+	objects_.push_back(Object::ObjectUniquePtr(new Object));
+	Object::primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ -0.1f, 0.45f, 0.1f}, 0.12f } ) );
+	Object::primitives_.back()->material_index = 3;
+
+
 	std::vector< int > primitives_index(Object::primitives_.size()) ;
 	for(unsigned int i = 0; i < primitives_index.size(); i++)
 		primitives_index[i] = i;
 
 	bvh.construct(primitives_index);
-	bvh.print(bvh.root);
+	//bvh.print(bvh.root);
 }
 
 void Scene::loadObject(const std::string file_name, int material_index, glm::vec3 translation){

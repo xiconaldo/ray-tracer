@@ -114,6 +114,7 @@ void BVH::constructNode(BBox *node, const std::vector< int > &primitives_index){
 	} while(axis != init_axis);
 
 	if( no_div_cost < min_cost){
+	// if (true) {
 		node->primitives_index = new std::vector<int>(primitives_index.size());
 		*(node->primitives_index) = primitives_index;
 		node->left = nullptr;
@@ -169,6 +170,8 @@ glm::vec3 BVH::min_components(const glm::vec3 &vecA, const glm::vec3 &vecB){
 
 bool BBox::intersect( const Ray &ray ){
 
+	// return true;
+
 	for(int i = 0; i < 3; i++){
 
 		int j = (i+1)%3;
@@ -220,24 +223,24 @@ void BVH::print(BBox *node){
 
 	for(int i = 0; i < depth; i++){
 		if(i == depth-1)
-			std::cout << "+---";
+			std::cout << "+--";
 		else if( path[i] == 0)
-			std::cout << "|   ";
+			std::cout << "|  ";
 		else
-			std::cout << "    ";
+			std::cout << "   ";
 	}
 
 	std::cout << node->size() << std::endl;
 
 	for(int i = 0; i < depth; i++){
 		if( path[i] == 0)
-			std::cout << "|   ";
+			std::cout << "|  ";
 		else
-			std::cout << "    ";
+			std::cout << "   ";
 	}
 
 	if(node->primitives_index == nullptr)
-		std::cout << "|   ";
+		std::cout << "|  ";
 
 	std::cout << std::endl;
 

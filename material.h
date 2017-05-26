@@ -6,14 +6,14 @@
 
 struct Material
 {
-	enum SamplerMode{ UNIFORM, DIRECTIONAL };
+	enum SamplerMode{ UNIFORM, DIRECTIONAL, GLOSSY };
 
 	glm::vec3 emittance_;
 	glm::vec3 reflectance_;
 	glm::vec3 (*brdf_pointer)( const glm::vec3& reflectance );
 	glm::vec3 (*btdf_pointer)( const glm::vec3& reflectance );
 	SamplerMode mode;
-	
+
 	glm::vec3 brdf( void );
 	glm::vec3 btdf( void );
 

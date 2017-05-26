@@ -12,4 +12,7 @@ images_ppm/*
 images_png/*
 objects/*.blend
 objects/*.mtl
+objects/*.ply
+objects/*.gz
+objects/*.
 swpathtracer
