@@ -117,7 +117,18 @@ void Scene::load( void ) {
 	for(unsigned int i = 0; i < primitives_index.size(); i++)
 		primitives_index[i] = i;
 
+	time_t initial_time = time(NULL);
 	bvh.construct(primitives_index);
+	int total_time = difftime(time(NULL), initial_time);
+
+	std::stringstream progress_stream;
+	progress_stream << "BVH generation time: "
+					<< total_time/3600 << " h "
+					<< (total_time/60)%60 << " min "
+					<< total_time%60 << " s   \n\n";
+
+	std::clog << progress_stream.str();
+
 	//bvh.print(bvh.root);
 }
 
