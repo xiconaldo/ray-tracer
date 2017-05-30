@@ -92,7 +92,7 @@ void RayTracer::integrate_parallel( const int num_rays, const int thread_id )
 
 				buffer_.buffer_data_[x][y] /= float(num_rays);
 
-				buffer_.buffer_data_[x][y] = glm::clamp(buffer_.buffer_data_[x][y],
+				buffer_.buffer_data_[x][y] = glm::clamp( glm::pow(buffer_.buffer_data_[x][y], glm::vec3{0.4545454f}),
 														glm::vec3{0.0f, 0.0f, 0.0f},
 														glm::vec3{1.0f, 1.0f, 1.0f});
 
