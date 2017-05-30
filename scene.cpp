@@ -61,13 +61,14 @@ bool Scene::intersect( const Ray &ray,
 
 void Scene::load( void ) {
 
-	Material m1 = {glm::vec3{0.0f}, glm::vec3{0.725f, 0.71f, 0.68f}, Material::diffuse, nullptr, Material::UNIFORM};
-	Material m2 = {glm::vec3{0.0f}, glm::vec3{0.63f, 0.065f, 0.05f}, Material::diffuse, nullptr, Material::UNIFORM};
-	Material m3 = {glm::vec3{0.0f}, glm::vec3{0.14f, 0.45f, 0.091f}, Material::diffuse, nullptr, Material::UNIFORM};
-	Material m4 = {glm::vec3{37.0f, 32.0f, 24.0f}, glm::vec3{0.78f}, Material::diffuse, nullptr, Material::UNIFORM}; //24.0f
-	Material m5 = {glm::vec3{0.0f}, glm::vec3{0.1f, 0.9f, 0.9f}, Material::specular, Material::specular, Material::DIRECTIONAL};
-	Material m6 = {glm::vec3{0.0f}, glm::vec3{0.06f, 0.065f, 0.84f}, Material::diffuse, nullptr, Material::UNIFORM};
-	Material m7 = {glm::vec3{0.0f}, glm::vec3{0.1f, 0.9f, 0.9f}, Material::specular, nullptr, Material::DIRECTIONAL};
+	Material m1 = {glm::vec3{0.0f}, glm::vec3{0.725f, 0.71f, 0.68f}, 0.0f, Material::diffuse, nullptr, Material::UNIFORM};
+	Material m2 = {glm::vec3{0.0f}, glm::vec3{0.63f, 0.065f, 0.05f}, 0.0f, Material::diffuse, nullptr, Material::UNIFORM};
+	Material m3 = {glm::vec3{0.0f}, glm::vec3{0.14f, 0.45f, 0.091f}, 0.0f, Material::diffuse, nullptr, Material::UNIFORM};
+	Material m4 = {glm::vec3{37.0f, 32.0f, 24.0f}, glm::vec3{0.78f}, 0.0f, Material::diffuse, nullptr, Material::UNIFORM}; //24.0f
+	Material m5 = {glm::vec3{0.0f}, glm::vec3{0.1f, 0.9f, 0.9f}, 0.0f, Material::specular, Material::mirror, Material::DIRECTIONAL};
+	Material m6 = {glm::vec3{0.0f}, glm::vec3{0.06f, 0.065f, 0.84f}, 0.0f, Material::diffuse, nullptr, Material::UNIFORM};
+	Material m7 = {glm::vec3{0.0f}, glm::vec3{0.1f, 0.9f, 0.9f}, 0.0f, Material::specular, nullptr, Material::DIRECTIONAL};
+	Material m8 = {glm::vec3{0.0f}, glm::vec3{1.0f, 0.71f, 0.29f}, 0.05f, Material::glossy, nullptr, Material::GLOSSY};
 
 	Object::material_list.push_back(m1);
 	Object::material_list.push_back(m2);
@@ -76,11 +77,12 @@ void Scene::load( void ) {
 	Object::material_list.push_back(m5);
 	Object::material_list.push_back(m6);
 	Object::material_list.push_back(m7);
+	Object::material_list.push_back(m8);
 
-	// loadObject("objects/cornell_box05.obj", 0);
-	// loadObject("objects/cornell_box02.obj", 1);
-	// loadObject("objects/cornell_box03.obj", 2);
-	// loadObject("objects/cornell_box04.obj", 3);
+	loadObject("objects/cornell_box05.obj", 0);
+	loadObject("objects/cornell_box02.obj", 1);
+	loadObject("objects/cornell_box03.obj", 2);
+	loadObject("objects/cornell_box04.obj", 3);
 	//loadObject("objects/cornell_box_cube00.obj", 4, glm::vec3{-0.2f, 0.2f, -0.5f});
 	// loadObject("objects/cornell_box_cube00.obj", 4, glm::vec3{0.1f, 0.0f, -0.3f});
 	// loadObject("objects/cornell_box_cube01.obj", 4);
@@ -105,12 +107,13 @@ void Scene::load( void ) {
 	// Object::primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ -1.0f, 10.0f, 2.0f}, 1.2f } ) );
 	// Object::primitives_.back()->material_index = 3;
 
-	loadObject("objects/buda.obj", 0);
-	loadObject("objects/buda_ground.obj", 0);
+	loadObject("objects/buda_cornell_box.obj", 7);
+	// loadObject("objects/buda.obj", 7);
+	// loadObject("objects/buda_ground.obj", 0);
 
-	objects_.push_back(Object::ObjectUniquePtr(new Object));
-	Object::primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ -0.1f, 0.45f, 0.1f}, 0.12f } ) );
-	Object::primitives_.back()->material_index = 3;
+	// objects_.push_back(Object::ObjectUniquePtr(new Object));
+	// Object::primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ -0.1f, 0.45f, 0.1f}, 0.12f } ) );
+	// Object::primitives_.back()->material_index = 3;
 
 
 	std::vector< int > primitives_index(Object::primitives_.size()) ;

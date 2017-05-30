@@ -194,7 +194,7 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 
 				Lo = material.emittance_ +
 					 2.0f * float(M_PI) *
-					 material.brdf() *
+					 material.brdf(n, r.direction_, new_ray) *
 					 L(reflect, ++depth, dist_theta, dist_phi, generator) *
 					 cosThetaOut;
 			}
@@ -208,21 +208,38 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 				Ray reflect{ intersection_record.position_ + 0.001f * n, new_ray };
 
 				Lo = material.emittance_ +
-					 material.brdf() *
+					 material.brdf(n, r.direction_, new_ray) *
 					 L(reflect, ++depth, dist_theta, dist_phi, generator);
 			}
 
 			else if(material.mode == Material::GLOSSY || fresnel == 2.0f){
 
-				// new_ray = r.direction_ -
-				// 		  2.0f * n *
-				// 		  glm::dot(r.direction_, n);
-				//
-				// Ray reflect{ intersection_record.position_ + 0.001f * n, new_ray };
-				//
-				// Lo = material.emittance_ +
-				// 	 material.brdf() *
-				// 	 L(reflect, ++depth, dist_theta, dist_phi, generator);
+				float theta, phi, x, y, z;
+
+				theta = dist_theta(generator);
+				phi = atan( sqrt( -material.roughness_ * material.roughness_ * log( dist_phi(generator) ) ) );
+
+				x = sin(phi) * cos(theta);
+				z = sin(phi) * sin(theta);
+				y = cos(phi);
+
+				glm::vec3 m = glm::vec3(x, y, z);
+
+				rotation.setFromV(n);
+				m = rotation.getBasisMatrix() * m;
+
+				new_ray = r.direction_ -
+						  2.0f * m *
+						  glm::dot(r.direction_, m);
+
+				cosThetaOut = glm::dot(new_ray, n);  // new_ray
+
+				Ray reflect{ intersection_record.position_ + 0.001f * n, new_ray };
+
+				Lo = material.emittance_ +
+					 material.brdf(n, new_ray, -r.direction_) * // mudei in por out
+					 L(reflect, ++depth, dist_theta, dist_phi, generator) *
+					 cosThetaOut;
 			}
 
 		}
