@@ -16,4 +16,5 @@ objects/*.ply
 objects/*.gz
 objects/*.
 objects/*.obj
+objects/*
 swpathtracer

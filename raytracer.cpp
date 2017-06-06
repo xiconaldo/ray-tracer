@@ -122,7 +122,7 @@ glm::vec3 RayTracer::L(const Ray& r, int depth,
 	float n_out = 1.5f;
 	bool in_out;
 
-	if(depth < 10 && scene_.intersect( r, intersection_record ) ){
+	if(depth < 7 && scene_.intersect( r, intersection_record ) ){
 
 
 		////////////////////////////////////

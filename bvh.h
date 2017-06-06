@@ -19,6 +19,7 @@ struct BBox{
 
 	bool intersect( const Ray &ray );
 	int size();
+	float cost(float parent_area = 0);
 
 };
 
@@ -28,10 +29,9 @@ public:
 	BVH();
 
 	void construct(std::vector< int > &primitives_index);
-
 	void constructNode(BBox *node, const std::vector< int > &primitives_index);
-
 	void print(BBox *node);
+	float cost();
 
 	BBox *root;
 

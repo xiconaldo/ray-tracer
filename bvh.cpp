@@ -28,23 +28,16 @@ void BVH::constructNode(BBox *node, const std::vector< int > &primitives_index){
 
 	// Select best axis to divide
 	glm::vec3 b_size = node->positive_corner - node->negative_corner;
-	float aux = std::max(b_size.x, std::max(b_size.y, b_size.z));
-	int axis;
-
-	if(aux == b_size.x) axis = 0;
-	else if(aux == b_size.y) axis = 1;
-	else axis = 2;
-
+	int axis = 0;
 
 	// Find best division
 	std::vector< int > left_prim;
 	std::vector< int > right_prim;
 
 	int trying = 0;
-	int init_axis = axis;
 	float min_cost = FLT_MAX;
 	glm::vec3 best_center;
-	int best_axis = init_axis;
+	int best_axis = axis;
 	glm::vec3 aux_size;
 	float left_area, right_area, total_area;
 	float left_cost, right_cost, total_cost, no_div_cost;
@@ -109,12 +102,11 @@ void BVH::constructNode(BBox *node, const std::vector< int > &primitives_index){
 			right_prim.clear();
 
 		}
-		axis = (axis+1)%3;
+		axis++;
 		trying = 0;
-	} while(axis != init_axis);
+	} while(axis < 3);
 
 	if( no_div_cost < min_cost){
-	// if (true) {
 		node->primitives_index = new std::vector<int>(primitives_index.size());
 		*(node->primitives_index) = primitives_index;
 		node->left = nullptr;
@@ -141,6 +133,9 @@ void BVH::constructNode(BBox *node, const std::vector< int > &primitives_index){
 	constructNode(node->right, right_prim);
 }
 
+float BVH::cost(){
+	return root->cost();
+}
 
 glm::vec3 BVH::max_components(const glm::vec3 &vecA, const glm::vec3 &vecB){
 
@@ -259,4 +254,17 @@ int BBox::size(){
 		return primitives_index->size();
 	else
 		return left->size() + right->size();
+}
+
+float BBox::cost(float parent_area){
+
+	glm::vec3 b_size = positive_corner - negative_corner;
+	float area = (b_size.x*b_size.y + b_size.y*b_size.z + b_size.x*b_size.z) * 2.0f;
+
+	if(parent_area == 0) parent_area = area;
+
+	if(primitives_index == nullptr)
+		return (area / parent_area) * (2 + left->cost(area) + right->cost(area));
+
+	return (area / parent_area) * primitives_index->size();
 }
