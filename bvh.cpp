@@ -21,11 +21,6 @@ void BVH::constructNode(BBox *node, const std::vector< int > &primitives_index){
 		node->positive_corner = max_components(Object::primitives_[prim_id]->positive_corner, node->positive_corner);
 	}
 
-	node->center = node->negative_corner;
-
-
-	// Too few elements, make leaf node were here
-
 	// Select best axis to divide
 	glm::vec3 b_size = node->positive_corner - node->negative_corner;
 	int axis = 0;
@@ -43,12 +38,15 @@ void BVH::constructNode(BBox *node, const std::vector< int > &primitives_index){
 	float left_cost, right_cost, total_cost, no_div_cost;
 	glm::vec3 current_negative_corner;
 	glm::vec3 current_positive_corner;
+	const int MAX_TRYING = 32;
 
 	total_area = (b_size.x*b_size.y + b_size.y*b_size.z + b_size.x*b_size.z) * 2.0f;
 	no_div_cost = primitives_index.size();
 
+	node->center = node->negative_corner;
+
 	do{
-		while( trying++ < 32 ){
+		while( trying++ < MAX_TRYING ){
 
 			for(int prim_id : primitives_index){
 				if(Object::primitives_[prim_id]->center_[axis] < node->center[axis])
@@ -96,7 +94,7 @@ void BVH::constructNode(BBox *node, const std::vector< int > &primitives_index){
 				best_axis = axis;
 			}
 
-			node->center[axis] = node->negative_corner[axis] + b_size[axis] * ( trying / 32.0f);
+			node->center[axis] = node->negative_corner[axis] + b_size[axis] * ( trying / float(MAX_TRYING));
 
 			left_prim.clear();
 			right_prim.clear();

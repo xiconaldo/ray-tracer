@@ -146,10 +146,6 @@ void Scene::load( void ) {
 	// loadObject("objects/monkey_cornell.obj", 4);
 	//loadObject("objects/light.obj", 3);
 
-	// loadObject("objects/tree.obj", 0);
-	//loadObject("objects/ground.obj", 0);
-	// //loadObject("objects/light_tree2.obj", 3);
-	//
 	// objects_.push_back(Object::ObjectUniquePtr(new Object));
 	// Object::primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ -1.0f, 10.0f, 2.0f}, 1.2f } ) );
 	// Object::primitives_.back()->material_index = 3;
@@ -157,7 +153,7 @@ void Scene::load( void ) {
 	//loadObject("objects/buda_cornell_box.obj", 7);
 	loadObject("objects/buda.obj", 7);
 	loadObject("objects/buda_ground.obj", 0);
-
+	//
 	objects_.push_back(Object::ObjectUniquePtr(new Object));
 	Object::primitives_.push_back( Primitive::PrimitiveUniquePtr( new Sphere{ glm::vec3{ -0.1f, 0.45f, 0.1f}, 0.12f } ) );
 	Object::primitives_.back()->material_index = 3;

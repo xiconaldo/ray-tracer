@@ -64,6 +64,17 @@ int main( int argc, char* argv[] )
 								glm::vec3{ 0.3f, -0.05f, -1.0f },   // look at
  								1.0f};
 
+ // CORNELL BOX
+ // 	PerspectiveCamera camera{  -1.25f * x_resolution / y_resolution,
+	// 							1.25f * x_resolution / y_resolution,
+	// 						   -1.25f,
+	// 							1.25f,
+	// 							glm::ivec2{ x_resolution, y_resolution },
+	// 							glm::vec3{ 0.0f, 1.0f,  2.5f },	 // position
+	// 							glm::vec3{ 0.0f, 1.0f,  0.0f },	 // up
+	// 							glm::vec3{ 0.0f, 1.0f, -1.0f },   // look at
+	// 							2.0f};
+
 
 	Scene scene{};
 
